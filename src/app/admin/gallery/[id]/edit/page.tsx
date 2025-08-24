@@ -1,9 +1,10 @@
 import GalleryForm from '@/components/admin/GalleryForm';
 
 interface EditGalleryPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-export default function EditGalleryPage({ params }: EditGalleryPageProps) {
-  return <GalleryForm galleryId={params.id} isEdit={true} />;
+export default async function EditGalleryPage({ params }: EditGalleryPageProps) {
+  const { id } = await params;
+  return <GalleryForm galleryId={id} isEdit={true} />;
 }

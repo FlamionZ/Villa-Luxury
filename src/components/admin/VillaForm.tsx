@@ -527,8 +527,8 @@ export default function VillaForm({ villaId, isEdit = false }: VillaFormProps) {
                         padding: '6px 12px',
                         marginRight: '8px',
                         border: '1px solid #ddd',
-                        background: (!(image as any).uploadMethod || (image as any).uploadMethod === 'url') ? '#667eea' : 'white',
-                        color: (!(image as any).uploadMethod || (image as any).uploadMethod === 'url') ? 'white' : '#333',
+                        background: (!image.uploadMethod || image.uploadMethod === 'url') ? '#667eea' : 'white',
+                        color: (!image.uploadMethod || image.uploadMethod === 'url') ? 'white' : '#333',
                         borderRadius: '4px',
                         cursor: 'pointer',
                         fontSize: '12px'
@@ -546,8 +546,8 @@ export default function VillaForm({ villaId, isEdit = false }: VillaFormProps) {
                       style={{
                         padding: '6px 12px',
                         border: '1px solid #ddd',
-                        background: (image as any).uploadMethod === 'file' ? '#667eea' : 'white',
-                        color: (image as any).uploadMethod === 'file' ? 'white' : '#333',
+                        background: image.uploadMethod === 'file' ? '#667eea' : 'white',
+                        color: image.uploadMethod === 'file' ? 'white' : '#333',
                         borderRadius: '4px',
                         cursor: 'pointer',
                         fontSize: '12px'
@@ -558,7 +558,7 @@ export default function VillaForm({ villaId, isEdit = false }: VillaFormProps) {
                   </div>
 
                   {/* URL Input or File Upload */}
-                  {(!(image as any).uploadMethod || (image as any).uploadMethod === 'url') ? (
+                  {(!image.uploadMethod || image.uploadMethod === 'url') ? (
                     <input
                       type="url"
                       placeholder="Image URL"

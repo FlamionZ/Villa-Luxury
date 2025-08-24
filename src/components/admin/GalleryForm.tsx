@@ -323,7 +323,7 @@ export default function GalleryForm({ galleryId, isEdit = false }: GalleryFormPr
                               const file = files[0];
                               if (fileInputRef.current) {
                                 fileInputRef.current.files = files;
-                                handleFileChange({ target: { files } } as any);
+                                handleFileChange({ target: { files } } as React.ChangeEvent<HTMLInputElement>);
                               }
                             }
                           }}

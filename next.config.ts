@@ -9,6 +9,18 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'plus.unsplash.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'adamvillapuncak.id',
+        port: '',
+        pathname: '/**',
+      },
       // Add your production image domains here
       {
         protocol: 'https',
@@ -17,16 +29,14 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
-    // Allow local uploads
-    localPatterns: [
-      {
-        pathname: '/uploads/**',
-        search: '',
-      },
-    ],
+    // Disable local optimization for uploads (serve directly)
+    unoptimized: false,
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    // Add fallback for broken images
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   // Security headers for production
   async headers() {

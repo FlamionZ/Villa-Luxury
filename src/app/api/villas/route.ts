@@ -1,5 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDbConnection } from '@/lib/database';
+import { RowDataPacket } from 'mysql2';
+
+interface VillaRow extends RowDataPacket {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  long_description?: string;
+  price: number;
+  location: string;
+  size: string;
+  max_guests: number;
+  status: string;
+  created_at: Date;
+  amenities?: string;
+  features?: string;
+  images?: string;
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -26,15 +44,15 @@ export async function GET(request: NextRequest) {
       LIMIT ?
     `;
 
-    const [rows] = await connection.execute(query, [status, parseInt(limit)]);
+    const [rows] = await connection.execute<VillaRow[]>(query, [status, parseInt(limit)]);
 
     // Format the data for frontend use
-    const formattedVillas = (rows as any[]).map((villa: any) => {
+    const formattedVillas = rows.map((villa: VillaRow) => {
       // Parse amenities
       const amenities = villa.amenities ? villa.amenities.split('^^^').map((item: string) => {
         const [icon, text] = item.split('|||');
         return { icon: icon || 'fas fa-star', text: text || '' };
-      }).filter((a: any) => a.text) : [];
+      }).filter((a: { icon: string; text: string }) => a.text) : [];
 
       // Parse features
       const features = villa.features ? villa.features.split('^^^').filter((f: string) => f.trim()) : [];
@@ -56,7 +74,7 @@ export async function GET(request: NextRequest) {
         title: villa.title,
         slug: villa.slug,
         description: villa.description || villa.long_description,
-        price: parseFloat(villa.price),
+        price: villa.price,
         image: primaryImage,
         amenities: amenities,
         features: features,

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
+import SafeImage from './SafeImage';
 
 interface GalleryImage {
   id: number;
@@ -70,11 +70,12 @@ export default function Gallery() {
                 className="gallery-item"
                 onClick={() => openLightbox(image)}
               >
-                <Image 
+                <SafeImage 
                   src={image.image_url && image.image_url.trim() !== '' ? image.image_url : 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'} 
                   alt={image.alt_text || image.title}
                   width={600}
                   height={300}
+                  fallbackSrc="/images/placeholder.svg"
                 />
               </div>
             ))}
@@ -123,7 +124,7 @@ export default function Gallery() {
                 maxHeight: '90%'
               }}
             >
-              <Image 
+              <SafeImage 
                 src={lightboxImage.image_url && lightboxImage.image_url.trim() !== '' ? lightboxImage.image_url : 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'} 
                 alt={lightboxImage.alt_text || lightboxImage.title}
                 width={1200}
@@ -134,6 +135,7 @@ export default function Gallery() {
                   objectFit: 'contain',
                   borderRadius: '10px'
                 }}
+                fallbackSrc="/images/placeholder.svg"
               />
               <button 
                 onClick={closeLightbox}
