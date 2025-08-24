@@ -1,39 +1,42 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
-const galleryImages = [
-  {
-    src: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-    alt: "Villa Exterior"
-  },
-  {
-    src: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-    alt: "Bedroom"
-  },
-  {
-    src: "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-    alt: "Pool Area"
-  },
-  {
-    src: "https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-    alt: "Living Room"
-  },
-  {
-    src: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-    alt: "Bathroom"
-  },
-  {
-    src: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-    alt: "Dining Area"
-  }
-];
+interface GalleryImage {
+  id: number;
+  title: string;
+  description: string;
+  image_url: string;
+  alt_text: string;
+  display_order: number;
+}
 
 export default function Gallery() {
-  const [lightboxImage, setLightboxImage] = useState<{ src: string; alt: string } | null>(null);
+  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [lightboxImage, setLightboxImage] = useState<GalleryImage | null>(null);
 
-  const openLightbox = (image: { src: string; alt: string }) => {
+  useEffect(() => {
+    fetchGalleryImages();
+  }, []);
+
+  const fetchGalleryImages = async () => {
+    try {
+      const response = await fetch('/api/gallery');
+      const data = await response.json();
+      
+      if (data.success) {
+        setGalleryImages(data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching gallery images:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const openLightbox = (image: GalleryImage) => {
     setLightboxImage(image);
   };
 
@@ -54,22 +57,29 @@ export default function Gallery() {
           <span className="section-subtitle">Galeri</span>
           <h2 className="section-title">Kemewahan dalam Setiap Detail</h2>
         </div>
-        <div className="gallery-grid">
-          {galleryImages.map((image, index) => (
-            <div 
-              key={index} 
-              className="gallery-item"
-              onClick={() => openLightbox(image)}
-            >
-              <Image 
-                src={image.src} 
-                alt={image.alt}
-                width={600}
-                height={300}
-              />
-            </div>
-          ))}
-        </div>
+        
+        {loading ? (
+          <div className="loading-placeholder" style={{ textAlign: 'center', padding: '60px 0' }}>
+            <p>Loading gallery...</p>
+          </div>
+        ) : (
+          <div className="gallery-grid">
+            {galleryImages.map((image) => (
+              <div 
+                key={image.id} 
+                className="gallery-item"
+                onClick={() => openLightbox(image)}
+              >
+                <Image 
+                  src={image.image_url && image.image_url.trim() !== '' ? image.image_url : 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'} 
+                  alt={image.alt_text || image.title}
+                  width={600}
+                  height={300}
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Lightbox */}
@@ -114,8 +124,8 @@ export default function Gallery() {
               }}
             >
               <Image 
-                src={lightboxImage.src} 
-                alt={lightboxImage.alt}
+                src={lightboxImage.image_url && lightboxImage.image_url.trim() !== '' ? lightboxImage.image_url : 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'} 
+                alt={lightboxImage.alt_text || lightboxImage.title}
                 width={1200}
                 height={800}
                 style={{
@@ -148,6 +158,20 @@ export default function Gallery() {
               >
                 &times;
               </button>
+              {lightboxImage.description && (
+                <div style={{
+                  position: 'absolute',
+                  bottom: '-60px',
+                  left: '0',
+                  right: '0',
+                  color: 'white',
+                  textAlign: 'center',
+                  padding: '10px'
+                }}>
+                  <h3 style={{ marginBottom: '5px' }}>{lightboxImage.title}</h3>
+                  <p style={{ fontSize: '14px', opacity: 0.8 }}>{lightboxImage.description}</p>
+                </div>
+              )}
             </div>
           </div>
         </div>

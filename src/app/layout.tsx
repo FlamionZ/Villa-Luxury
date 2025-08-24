@@ -9,8 +9,46 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Dieng Villa Luxury - Penginapan Mewah yang Tak Terlupakan",
-  description: "Nikmati pengalaman menginap yang mewah dan tak terlupakan di Dieng Villa Luxury. Villa eksklusif dengan fasilitas terbaik.",
+  title: "Dieng Villa Luxury - Penginapan Mewah di Dieng | Villa Paradise",
+  description: "Villa eksklusif dengan pemandangan Dieng yang menakjubkan. Fasilitas lengkap, pemandangan pegunungan, dan layanan terbaik untuk pengalaman menginap yang tak terlupakan.",
+  keywords: "villa dieng, penginapan dieng, villa luxury, villa dengan view pegunungan, akomodasi dieng, villa terbaik dieng",
+  authors: [{ name: "Villa Paradise Dieng" }],
+  openGraph: {
+    title: "Dieng Villa Luxury - Villa Eksklusif dengan Pemandangan Menakjubkan",
+    description: "Villa mewah di Dieng dengan fasilitas lengkap dan pemandangan pegunungan yang memukau. Booking sekarang untuk pengalaman tak terlupakan!",
+    type: "website",
+    locale: "id_ID",
+    url: "https://villa-paradise-dieng.com",
+    siteName: "Villa Paradise Dieng",
+    images: [
+      {
+        url: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&h=630",
+        width: 1200,
+        height: 630,
+        alt: "Villa Paradise Dieng - Luxury Villa with Mountain View",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Dieng Villa Luxury - Villa Eksklusif di Dieng",
+    description: "Villa mewah dengan pemandangan pegunungan Dieng yang menakjubkan. Fasilitas lengkap & layanan terbaik.",
+    images: ["https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&h=630"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  verification: {
+    google: "your-google-verification-code", // Replace with actual Google verification code
+  },
 };
 
 export default function RootLayout({
