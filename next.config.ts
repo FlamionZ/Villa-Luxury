@@ -21,6 +21,25 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      // Google Images and other common domains
+      {
+        protocol: 'https',
+        hostname: 'www.google.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'static.promediateknologi.id',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos',
+        port: '',
+        pathname: '/**',
+      },
       // Add your production image domains here
       {
         protocol: 'https',

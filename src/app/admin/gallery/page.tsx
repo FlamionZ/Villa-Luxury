@@ -49,23 +49,20 @@ export default function GalleryManagePage() {
 
   const updateGalleryStatus = async (itemId: number, newStatus: boolean) => {
     try {
-      const item = galleryItems.find(g => g.id === itemId);
-      if (!item) return;
-
-      const response = await fetch(`/api/admin/gallery/${itemId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          ...item,
-          is_active: newStatus 
-        })
+      const response = await fetch(`/api/admin/gallery/${itemId}/toggle`, {
+        method: 'PATCH'
       });
+
+      const data = await response.json();
 
       if (response.ok) {
         fetchGalleryItems(); // Refresh the list
+      } else {
+        alert(data.error || 'Failed to update gallery item status');
       }
     } catch (error) {
       console.error('Error updating gallery item:', error);
+      alert('Failed to update gallery item status');
     }
   };
 

@@ -50,17 +50,20 @@ export default function VillasPage() {
 
   const updateVillaStatus = async (villaId: number, newStatus: 'active' | 'inactive') => {
     try {
-      const response = await fetch(`/api/admin/villas/${villaId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus })
+      const response = await fetch(`/api/admin/villas/${villaId}/toggle`, {
+        method: 'PATCH'
       });
+
+      const data = await response.json();
 
       if (response.ok) {
         fetchVillas(); // Refresh the list
+      } else {
+        alert(data.error || 'Failed to update villa status');
       }
     } catch (error) {
       console.error('Error updating villa:', error);
+      alert('Failed to update villa status');
     }
   };
 

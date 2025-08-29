@@ -20,17 +20,13 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" suppressHydrationWarning>
-      <head>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-      </head>
-      <body className={montserrat.variable} suppressHydrationWarning>
-        <div className="admin-wrapper">
-          <AuthProvider>
-            {children}
-          </AuthProvider>
-        </div>
-      </body>
-    </html>
+    <>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+      <div className={`admin-wrapper ${montserrat.variable}`}>
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+      </div>
+    </>
   );
 }

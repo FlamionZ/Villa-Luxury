@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import pool from '../../../../../lib/db';
+import { getDbConnection } from '@/lib/database';
 import { RowDataPacket } from 'mysql2';
 
 interface VillaDetail extends RowDataPacket {
@@ -39,9 +39,10 @@ export async function GET(
 ) {
   try {
     const { slug } = await params;
+    const db = await getDbConnection();
 
     // Get villa basic info
-    const [villaRows] = await pool.execute<VillaDetail[]>(
+    const [villaRows] = await db.execute<VillaDetail[]>(
       'SELECT * FROM villa_types WHERE slug = ? AND status = "active"',
       [slug]
     );
@@ -56,19 +57,19 @@ export async function GET(
     const villa = villaRows[0];
 
     // Get amenities
-    const [amenityRows] = await pool.execute<VillaAmenity[]>(
+    const [amenityRows] = await db.execute<VillaAmenity[]>(
       'SELECT icon, text FROM villa_amenities WHERE villa_id = ?',
       [villa.id]
     );
 
     // Get features
-    const [featureRows] = await pool.execute<VillaFeature[]>(
+    const [featureRows] = await db.execute<VillaFeature[]>(
       'SELECT feature_text FROM villa_features WHERE villa_id = ?',
       [villa.id]
     );
 
     // Get images
-    const [imageRows] = await pool.execute<VillaImage[]>(
+    const [imageRows] = await db.execute<VillaImage[]>(
       'SELECT image_url, alt_text, is_primary, sort_order FROM villa_images WHERE villa_id = ? ORDER BY sort_order ASC, is_primary DESC',
       [villa.id]
     );
