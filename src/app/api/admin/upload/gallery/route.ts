@@ -74,7 +74,14 @@ export async function POST(request: NextRequest) {
       ).end(buffer);
     });
 
-    const uploadResult = result as any;
+    const uploadResult = result as {
+      secure_url: string;
+      public_id: string;
+      width: number;
+      height: number;
+      format: string;
+      bytes: number;
+    };
 
     return NextResponse.json({
       success: true,

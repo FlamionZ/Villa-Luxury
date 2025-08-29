@@ -8,7 +8,7 @@ export async function getDbConnection(): Promise<mysql.Connection> {
       // Test if connection is still alive
       await connection.ping();
       return connection;
-    } catch (error) {
+    } catch (_error) {
       // Connection is dead, create a new one
       connection = null;
     }

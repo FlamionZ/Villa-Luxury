@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import ProtectedRoute from '@/components/ProtectedRoute';
@@ -23,11 +23,7 @@ export default function VillasPage() {
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('');
 
-  useEffect(() => {
-    fetchVillas();
-  }, [statusFilter]);
-
-  const fetchVillas = async () => {
+  const fetchVillas = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -46,9 +42,13 @@ export default function VillasPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter]);
 
-  const updateVillaStatus = async (villaId: number, newStatus: 'active' | 'inactive') => {
+  useEffect(() => {
+    fetchVillas();
+  }, [fetchVillas]);
+
+  const updateVillaStatus = async (villaId: number) => {
     try {
       const response = await fetch(`/api/admin/villas/${villaId}/toggle`, {
         method: 'PATCH'
@@ -224,7 +224,7 @@ export default function VillasPage() {
                       </Link>
                       
                       <button
-                        onClick={() => updateVillaStatus(villa.id, villa.status === 'active' ? 'inactive' : 'active')}
+                        onClick={() => updateVillaStatus(villa.id)}
                         className={`btn btn-sm ${villa.status === 'active' ? 'btn-warning' : 'btn-success'}`}
                       >
                         <i className={`fas ${villa.status === 'active' ? 'fa-pause' : 'fa-play'}`}></i>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import ProtectedRoute from '@/components/ProtectedRoute';
@@ -22,11 +22,7 @@ export default function GalleryManagePage() {
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('');
 
-  useEffect(() => {
-    fetchGalleryItems();
-  }, [statusFilter]);
-
-  const fetchGalleryItems = async () => {
+  const fetchGalleryItems = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -45,9 +41,13 @@ export default function GalleryManagePage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter]);
 
-  const updateGalleryStatus = async (itemId: number, newStatus: boolean) => {
+  useEffect(() => {
+    fetchGalleryItems();
+  }, [fetchGalleryItems]);
+
+  const updateGalleryStatus = async (itemId: number) => {
     try {
       const response = await fetch(`/api/admin/gallery/${itemId}/toggle`, {
         method: 'PATCH'
@@ -208,7 +208,7 @@ export default function GalleryManagePage() {
                       </Link>
                       
                       <button
-                        onClick={() => updateGalleryStatus(item.id, !item.is_active)}
+                        onClick={() => updateGalleryStatus(item.id)}
                         className={`btn btn-sm ${item.is_active ? 'btn-warning' : 'btn-success'}`}
                       >
                         <i className={`fas ${item.is_active ? 'fa-eye-slash' : 'fa-eye'}`}></i>
