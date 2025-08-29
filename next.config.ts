@@ -40,6 +40,13 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      // Cloudinary for image uploads
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        port: '',
+        pathname: '/**',
+      },
       // Add your production image domains here
       {
         protocol: 'https',

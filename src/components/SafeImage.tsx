@@ -38,23 +38,6 @@ export default function SafeImage({
     }
   };
 
-  // For local uploads, use direct path without Next.js optimization if needed
-  const shouldUseDirectPath = imageSrc.startsWith('/uploads/');
-
-  if (shouldUseDirectPath && imageError) {
-    return (
-      <img
-        src={imageSrc}
-        alt={alt}
-        width={width}
-        height={height}
-        className={className}
-        style={style}
-        onError={handleError}
-      />
-    );
-  }
-
   return (
     <Image
       src={imageSrc}
