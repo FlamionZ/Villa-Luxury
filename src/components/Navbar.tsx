@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -35,8 +36,15 @@ export default function Navbar() {
       <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
         <div className="nav-container">
           <div className="nav-logo">
-            {/* Updated name to Dieng Villa Luxury */}
-            <h2>Dieng Villa Luxury</h2>
+            <Image 
+              src="/images/Logomark_coklat-01.png" 
+              alt="Villa Dieng Luxury Logo" 
+              width={50} 
+              height={50}
+              style={{ height: 'auto' }}
+              priority
+            />
+            <h2>Villa Dieng Luxury</h2>
           </div>
           <ul className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
             <li className="nav-item">

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 
 export default function Footer() {
   const [email, setEmail] = useState('');
@@ -48,7 +49,16 @@ export default function Footer() {
       <div className="container">
         <div className="footer-content">
           <div className="footer-section">
-            <h3>Dieng Villa Luxury</h3>
+            <div className="footer-logo">
+              <Image 
+                src="/images/Logomark_coklat-01.png" 
+                alt="Villa Dieng Luxury Logo" 
+                width={60} 
+                height={60}
+                style={{ height: 'auto' }}
+              />
+              <h3>Villa Dieng Luxury</h3>
+            </div>
             <p>Pengalaman villa mewah yang tak terlupakan di Dieng. Nikmati kemewahan dan kenyamanan di destinasi impian Anda.</p>
             <div className="social-links">
               <a href="#"><i className="fab fa-facebook"></i></a>
@@ -92,7 +102,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="footer-bottom">
-          <p>&copy; 2025 Dieng Villa Luxury. All rights reserved.</p>
+          <p>&copy; 2025 Villa Dieng Luxury. All rights reserved.</p>
           <div className="footer-links">
             <a href="#">Privacy Policy</a>
             <a href="#">Terms of Service</a>

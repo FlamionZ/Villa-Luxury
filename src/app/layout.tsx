@@ -9,12 +9,12 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Dieng Villa Luxury - Penginapan Mewah di Dieng | Villa Paradise",
+  title: "Villa Dieng Luxury - Penginapan Mewah di Dieng | Villa Paradise",
   description: "Villa eksklusif dengan pemandangan Dieng yang menakjubkan. Fasilitas lengkap, pemandangan pegunungan, dan layanan terbaik untuk pengalaman menginap yang tak terlupakan.",
   keywords: "villa dieng, penginapan dieng, villa luxury, villa dengan view pegunungan, akomodasi dieng, villa terbaik dieng",
   authors: [{ name: "Villa Paradise Dieng" }],
   openGraph: {
-    title: "Dieng Villa Luxury - Villa Eksklusif dengan Pemandangan Menakjubkan",
+    title: "Villa Dieng Luxury - Villa Eksklusif dengan Pemandangan Menakjubkan",
     description: "Villa mewah di Dieng dengan fasilitas lengkap dan pemandangan pegunungan yang memukau. Booking sekarang untuk pengalaman tak terlupakan!",
     type: "website",
     locale: "id_ID",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Dieng Villa Luxury - Villa Eksklusif di Dieng",
+    title: "Villa Dieng Luxury - Villa Eksklusif di Dieng",
     description: "Villa mewah dengan pemandangan pegunungan Dieng yang menakjubkan. Fasilitas lengkap & layanan terbaik.",
     images: ["https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&h=630"],
   },
@@ -59,6 +59,10 @@ export default function RootLayout({
   return (
     <html lang="id">
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/icon-16x16.png" sizes="16x16" type="image/png" />
+        <link rel="icon" href="/icon-32x32.png" sizes="32x32" type="image/png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
       </head>
       <body className={`${montserrat.variable}`}>

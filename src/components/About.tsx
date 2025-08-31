@@ -74,10 +74,10 @@ export default function About() {
           <div className="about-content">
             <div className="section-header">
               <span className="section-subtitle">Tentang Kami</span>
-              <h2 className="section-title">Dieng Villa Luxury: Surga Tersembunyi di Dieng</h2>
+              <h2 className="section-title">Villa Dieng Luxury: Surga Tersembunyi di Dieng</h2>
             </div>
             <p className="about-description">
-              Dieng Villa Luxury adalah destinasi mewah yang terletak di jantung Dieng, menawarkan pengalaman menginap yang tak terlupakan. Dengan arsitektur modern yang memadukan sentuhan tradisional Jawa, kami memberikan kenyamanan terbaik untuk liburan Anda.
+              Villa Dieng Luxury adalah destinasi mewah yang terletak di jantung Dieng, menawarkan pengalaman menginap yang tak terlupakan. Dengan arsitektur modern yang memadukan sentuhan tradisional Jawa, kami memberikan kenyamanan terbaik untuk liburan Anda.
             </p>
             <div className="about-features">
               <div className="feature">

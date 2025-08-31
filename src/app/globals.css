@@ -164,12 +164,24 @@ h1, h2, h3 {
     align-items: center;
 }
 
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
 .nav-logo h2 {
     color: #b8860b;
     font-size: 1.8rem;
     font-weight: 600;
     font-family: var(--font-montserrat), serif;
     letter-spacing: -0.025em;
+    margin: 0;
+}
+
+.nav-logo img {
+    max-height: 45px;
+    width: auto;
 }
 
 .nav-menu {
@@ -1491,6 +1503,26 @@ section {
 .footer-section h3 {
     font-size: 2rem;
     margin-bottom: 25px;
+    color: #b8860b;
+    font-weight: 700;
+    position: relative;
+}
+
+.footer-logo {
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.footer-logo img {
+    max-height: 50px;
+    width: auto;
+}
+
+.footer-logo h3 {
+    font-size: 2rem;
+    margin: 0;
     color: #b8860b;
     font-weight: 700;
     position: relative;
@@ -3644,5 +3676,43 @@ section {
   
   .gallery-admin-actions {
     justify-content: space-between;
+  }
+  
+  .nav-logo h2 {
+    font-size: 1.4rem;
+  }
+  
+  .nav-logo img {
+    max-height: 35px;
+  }
+  
+  .nav-logo {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-logo h2 {
+    font-size: 1.2rem;
+  }
+  
+  .nav-logo img {
+    max-height: 30px;
+  }
+  
+  .nav-logo {
+    gap: 8px;
+  }
+  
+  .footer-logo h3 {
+    font-size: 1.5rem;
+  }
+  
+  .footer-logo img {
+    max-height: 40px;
+  }
+  
+  .footer-logo {
+    gap: 10px;
   }
 }

@@ -30,19 +30,13 @@ export default function AdminSidebar() {
       icon: 'fas fa-images',
       label: 'Gallery',
       isActive: pathname.startsWith('/admin/gallery')
-    },
-    {
-      href: '/admin/settings',
-      icon: 'fas fa-cog',
-      label: 'Settings',
-      isActive: pathname.startsWith('/admin/settings')
     }
   ];
 
   return (
     <div className="admin-sidebar">
       <div className="sidebar-header">
-        <h2><i className="fas fa-hotel"></i> Dieng Villa Luxury</h2>
+        <h2><i className="fas fa-hotel"></i> Villa Dieng Luxury</h2>
         <p>Admin Dashboard</p>
       </div>
       
