@@ -32,6 +32,19 @@ export default function AdminDashboard() {
   });
   const [loading, setLoading] = useState(true);
 
+  const formatDate = (dateString: string) => {
+    if (!dateString) return 'Date not set';
+    
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return 'Invalid date format';
+    
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
   useEffect(() => {
     fetchDashboardStats();
   }, []);
@@ -144,8 +157,8 @@ export default function AdminDashboard() {
                       <tr key={booking.id}>
                         <td>{booking.guest_name}</td>
                         <td>{booking.villa_title}</td>
-                        <td>{new Date(booking.check_in).toLocaleDateString()}</td>
-                        <td>{new Date(booking.check_out).toLocaleDateString()}</td>
+                        <td>{formatDate(booking.check_in)}</td>
+                        <td>{formatDate(booking.check_out)}</td>
                         <td>
                           <span className={`status-badge status-${booking.status}`}>
                             {booking.status}

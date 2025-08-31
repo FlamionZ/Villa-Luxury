@@ -44,8 +44,8 @@ export default function Contact() {
           </div>
           <div className="contact-form">
             <div className="contact-cta">
-              <h3>Hubungi Kami Langsung</h3>
-              <p>Untuk reservasi dan informasi lebih lanjut, silakan hubungi kami melalui:</p>
+              <h3>Book Your Villa</h3>
+              <p>Ready to experience luxury? Contact us for villa booking and more information:</p>
               
               <div className="contact-buttons">
                 <a 

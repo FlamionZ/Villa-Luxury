@@ -22,15 +22,15 @@ interface BookingWithVilla extends RowDataPacket {
   guest_name: string;
   guest_email: string;
   guest_phone: string;
-  check_in: Date;
-  check_out: Date;
+  check_in: string;
+  check_out: string;
   guests_count: number;
-  total_nights: number;
   total_price: number;
   special_requests?: string;
   status: string;
-  booking_source: string;
+  total_nights: number;
   created_at: Date;
+  updated_at: Date;
   villa_title: string;
   villa_slug: string;
 }
@@ -60,7 +60,13 @@ export const GET = requireAdmin(async (request: NextRequest) => {
     const connection = await getDbConnection();
 
     let query = `
-      SELECT b.*, v.title as villa_title, v.slug as villa_slug
+      SELECT 
+        b.id, b.villa_id, b.guest_name, b.guest_email, b.guest_phone,
+        b.check_in_date as check_in, b.check_out_date as check_out,
+        b.num_guests as guests_count, b.total_price, b.special_requests, 
+        b.status, b.created_at, b.updated_at,
+        DATEDIFF(b.check_out_date, b.check_in_date) as total_nights,
+        v.title as villa_title, v.slug as villa_slug
       FROM bookings b
       LEFT JOIN villa_types v ON b.villa_id = v.id
     `;
@@ -118,7 +124,7 @@ export const POST = requireAdmin(async (request: NextRequest) => {
     const body: BookingFormData = await request.json();
     const {
       villa_id, guest_name, guest_email, guest_phone, check_in, check_out,
-      guests_count, special_requests, status = 'pending', booking_source = 'admin'
+      guests_count, special_requests, status = 'pending'
     } = body;
 
     const connection = await getDbConnection();
@@ -142,7 +148,7 @@ export const POST = requireAdmin(async (request: NextRequest) => {
       `SELECT id FROM bookings 
        WHERE villa_id = ? 
        AND status IN ('confirmed', 'pending')
-       AND ((check_in <= ? AND check_out > ?) OR (check_in < ? AND check_out >= ?))`,
+       AND ((check_in_date <= ? AND check_out_date > ?) OR (check_in_date < ? AND check_out_date >= ?))`,
       [villa_id, check_in, check_in, check_out, check_out]
     );
 
@@ -154,11 +160,11 @@ export const POST = requireAdmin(async (request: NextRequest) => {
     }
 
     const [result] = await connection.execute<ResultSetHeader>(
-      `INSERT INTO bookings (villa_id, guest_name, guest_email, guest_phone, check_in, check_out, 
-                           guests_count, total_nights, total_price, special_requests, status, booking_source)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO bookings (villa_id, guest_name, guest_email, guest_phone, check_in_date, check_out_date, 
+                           num_guests, total_price, special_requests, status)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [villa_id, guest_name, guest_email, guest_phone, check_in, check_out,
-       guests_count, total_nights, total_price, special_requests, status, booking_source]
+       guests_count, total_price, special_requests, status]
     );
 
     const bookingId = result.insertId;

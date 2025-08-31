@@ -33,7 +33,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
+      <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`} suppressHydrationWarning>
         <div className="nav-container">
           <div className="nav-logo">
             <Image 

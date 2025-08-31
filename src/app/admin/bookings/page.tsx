@@ -90,7 +90,12 @@ export default function BookingsPage() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    if (!dateString) return 'Date not set';
+    
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return 'Invalid date format';
+    
+    return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
