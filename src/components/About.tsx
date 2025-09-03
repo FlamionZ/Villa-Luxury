@@ -55,7 +55,7 @@ export default function About() {
         <div className="about-grid">
           <div className="about-image">
             <Image 
-              src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
+              src="/images/villa2.jpg" 
               alt="Dieng Villa Luxury"
               width={1000}
               height={500}

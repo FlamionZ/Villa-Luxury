@@ -243,7 +243,7 @@ h1, h2, h3 {
     height: 100vh;
     min-height: 600px;
     background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
-                url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+                url('/images/villa.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: scroll;
