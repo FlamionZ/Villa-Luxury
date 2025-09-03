@@ -6,7 +6,6 @@ export interface VillaType {
   long_description: string;
   price: number;
   location: string;
-  size: string;
   max_guests: number;
   status: 'active' | 'inactive';
   created_at: Date;
@@ -97,7 +96,6 @@ export interface VillaFormData {
   long_description: string;
   price: number;
   location: string;
-  size: string;
   max_guests: number;
   status: 'active' | 'inactive';
   amenities: Array<{ icon: string; text: string }>;

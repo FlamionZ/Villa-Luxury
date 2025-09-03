@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { formatRupiahNumber } from '@/lib/utils';
 
 interface VillaFormData {
   slug: string;
@@ -11,7 +12,6 @@ interface VillaFormData {
   long_description: string;
   price: number;
   location: string;
-  size: string;
   max_guests: number;
   status: 'active' | 'inactive';
   amenities: Array<{ icon: string; text: string }>;
@@ -41,7 +41,6 @@ export default function VillaForm({ villaId, isEdit = false }: VillaFormProps) {
     long_description: '',
     price: 0,
     location: '',
-    size: '',
     max_guests: 2,
     status: 'active',
     amenities: [{ icon: 'fas fa-bed', text: '1 Kamar Tidur' }],
@@ -68,7 +67,6 @@ export default function VillaForm({ villaId, isEdit = false }: VillaFormProps) {
           long_description: data.data.long_description,
           price: data.data.price,
           location: data.data.location,
-          size: data.data.size,
           max_guests: data.data.max_guests,
           status: data.data.status,
           amenities: data.data.amenities || [],
@@ -376,7 +374,7 @@ export default function VillaForm({ villaId, isEdit = false }: VillaFormProps) {
                   />
                   {formData.price > 0 && (
                     <small className="text-muted">
-                      Format: Rp {formData.price.toLocaleString('id-ID')}/malam
+                      Format: Rp {formatRupiahNumber(formData.price)}/malam
                     </small>
                   )}
                 </div>
@@ -402,18 +400,6 @@ export default function VillaForm({ villaId, isEdit = false }: VillaFormProps) {
                     value={formData.location}
                     onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
                     className="form-control"
-                    required
-                  />
-                </div>
-                
-                <div className="form-group">
-                  <label>Size *</label>
-                  <input
-                    type="text"
-                    value={formData.size}
-                    onChange={(e) => setFormData(prev => ({ ...prev, size: e.target.value }))}
-                    className="form-control"
-                    placeholder="e.g., 120m²"
                     required
                   />
                 </div>

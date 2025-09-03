@@ -10,7 +10,6 @@ interface VillaFormData {
   long_description?: string;
   price: number;
   location: string;
-  size: string;
   max_guests: number;
   status?: string;
   amenities?: Array<{ icon: string; text: string }>;
@@ -26,7 +25,6 @@ interface VillaRow extends RowDataPacket {
   long_description?: string;
   price: number;
   location: string;
-  size: string;
   max_guests: number;
   status: string;
   created_at: Date;
@@ -112,7 +110,7 @@ export async function PUT(
     const { id: villaId } = await params;
     const body: VillaFormData = await request.json();
     const {
-      slug, title, description, long_description, price, location, size, max_guests, status,
+      slug, title, description, long_description, price, location, max_guests, status,
       amenities, features, images
     } = body;
 
@@ -123,9 +121,9 @@ export async function PUT(
       await connection.execute(
         `UPDATE villa_types 
          SET slug = ?, title = ?, description = ?, long_description = ?, price = ?, 
-             location = ?, size = ?, max_guests = ?, status = ?, updated_at = CURRENT_TIMESTAMP
+             location = ?, max_guests = ?, status = ?, updated_at = CURRENT_TIMESTAMP
          WHERE id = ?`,
-        [slug, title, description, long_description || null, price, location, size, max_guests, status || 'active', villaId]
+        [slug, title, description, long_description || null, price, location, max_guests, status || 'active', villaId]
       );
 
       // Delete existing amenities, features, images

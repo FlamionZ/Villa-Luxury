@@ -102,7 +102,6 @@ export async function GET(
       bedrooms: amenities.find(a => a.text.includes('Kamar Tidur'))?.text.split(' ')[0] || '2',
       bathrooms: amenities.find(a => a.text.includes('Kamar Mandi'))?.text.split(' ')[0] || '2',
       location: villa.location,
-      size: villa.size,
       status: villa.status,
       createdAt: villa.created_at,
       updatedAt: villa.updated_at

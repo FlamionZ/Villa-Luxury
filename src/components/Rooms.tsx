@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import BookingCalendar from './BookingCalendar';
+import { formatRupiahNumber } from '@/lib/utils';
 
 interface Villa {
   id: number;
@@ -144,7 +145,7 @@ export default function Rooms() {
                   width={800}
                   height={250}
                 />
-                <div className="room-price">Rp {(villa.price || 0).toLocaleString('id-ID')}/malam</div>
+                <div className="room-price">Rp {formatRupiahNumber(villa.price || 0)}/malam</div>
               </div>
               <div className="room-content">
                 <h3 className="room-title">{villa.title || 'Villa'}</h3>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import { formatRupiahNumber } from '@/lib/utils';
 
 interface Booking {
   id: number;
@@ -215,7 +216,7 @@ export default function BookingsPage() {
                       </div>
                     </td>
                     <td>{booking.guests_count}</td>
-                    <td>Rp {booking.total_price?.toLocaleString('id-ID')}</td>
+                    <td>Rp {formatRupiahNumber(booking.total_price || 0)}</td>
                     <td>
                       <select
                         value={booking.status}

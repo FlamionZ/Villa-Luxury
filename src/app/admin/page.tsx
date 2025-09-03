@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { formatRupiahNumber } from '@/lib/utils';
 import Link from 'next/link';
 import AdminSidebar from '@/components/AdminSidebar';
 import AdminHeader from '@/components/AdminHeader';
@@ -164,7 +165,7 @@ export default function AdminDashboard() {
                             {booking.status}
                           </span>
                         </td>
-                        <td>Rp {booking.total_price?.toLocaleString('id-ID')}</td>
+                        <td>Rp {formatRupiahNumber(booking.total_price || 0)}</td>
                       </tr>
                     ))
                   )}

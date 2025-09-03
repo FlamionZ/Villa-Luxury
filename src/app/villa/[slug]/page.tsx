@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import BookingCalendar from '@/components/BookingCalendar';
+import { formatRupiahNumber } from '@/lib/utils';
 import { useState, useEffect } from 'react';
 
 interface VillaData {
@@ -83,7 +84,7 @@ export default function VillaDetailPage() {
   }
 
   const handleBookNow = () => {
-    const message = `Halo, saya tertarik untuk memesan ${villa.title} dengan harga Rp ${villa.price.toLocaleString('id-ID')}/malam. Bisakah Anda memberikan informasi lebih lanjut?`;
+    const message = `Halo, saya tertarik untuk memesan ${villa.title} dengan harga Rp ${formatRupiahNumber(villa.price)}/malam. Bisakah Anda memberikan informasi lebih lanjut?`;
     const whatsappUrl = `https://wa.me/6281234567890?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
@@ -107,13 +108,12 @@ export default function VillaDetailPage() {
               <p className="villa-detail-subtitle">{villa.description}</p>
               <div className="villa-detail-quick-info">
                 <span><i className="fas fa-map-marker-alt"></i> {villa.location || 'Lokasi tidak tersedia'}</span>
-                <span><i className="fas fa-ruler-combined"></i> {villa.size || 'Ukuran tidak tersedia'}</span>
                 <span><i className="fas fa-users"></i> Maks {villa.maxGuests || 2} Tamu</span>
               </div>
             </div>
             <div className="villa-detail-price-section">
               <div className="villa-detail-price">
-                <span className="price-amount">Rp {villa.price.toLocaleString('id-ID')}</span>
+                <span className="price-amount">Rp {formatRupiahNumber(villa.price)}</span>
                 <span className="price-period">/malam</span>
               </div>
               <button className="btn btn-primary" onClick={handleBookNow}>
@@ -249,7 +249,7 @@ export default function VillaDetailPage() {
               <div className="booking-card">
                 <div className="booking-card-header">
                   <div className="booking-price">
-                    <span className="price-amount">Rp {villa.price.toLocaleString('id-ID')}</span>
+                    <span className="price-amount">Rp {formatRupiahNumber(villa.price)}</span>
                     <span className="price-period">/malam</span>
                   </div>
                 </div>
@@ -267,10 +267,6 @@ export default function VillaDetailPage() {
                     <div className="info-item">
                       <i className="fas fa-users"></i>
                       <span>Maks {villa.maxGuests || 4} Tamu</span>
-                    </div>
-                    <div className="info-item">
-                      <i className="fas fa-ruler-combined"></i>
-                      <span>{villa.size || 'Ukuran tidak tersedia'}</span>
                     </div>
                   </div>
                   

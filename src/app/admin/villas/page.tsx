@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import { formatRupiahNumber } from '@/lib/utils';
 
 interface Villa {
   id: number;
@@ -12,7 +13,6 @@ interface Villa {
   description: string;
   price: number;
   location: string;
-  size: string;
   max_guests: number;
   status: 'active' | 'inactive';
   images: Array<{ image_url: string; is_primary: boolean }>;
@@ -200,17 +200,13 @@ export default function VillasPage() {
                         <span>{villa.location}</span>
                       </div>
                       <div className="detail-item">
-                        <i className="fas fa-ruler-combined"></i>
-                        <span>{villa.size}</span>
-                      </div>
-                      <div className="detail-item">
                         <i className="fas fa-users"></i>
                         <span>Max {villa.max_guests} guests</span>
                       </div>
                     </div>
 
                     <div className="villa-price">
-                      <span className="price">Rp {villa.price?.toLocaleString('id-ID')}</span>
+                      <span className="price">Rp {formatRupiahNumber(villa.price || 0)}</span>
                       <span className="period">/malam</span>
                     </div>
 
