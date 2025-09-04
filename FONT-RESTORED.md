@@ -9,7 +9,7 @@
 - ✅ **Implementation**: Applied ke body dengan className
 
 ### **Metadata Restored:**
-- ✅ **SEO Title**: "Dieng Villa Luxury - Penginapan Mewah di Dieng"
+- ✅ **SEO Title**: "Villa Dieng Luxury - Penginapan Mewah di Dieng"
 - ✅ **Description**: Lengkap dengan keywords
 - ✅ **Open Graph**: Social media sharing optimized
 - ✅ **Twitter Cards**: Optimized untuk Twitter

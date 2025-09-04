@@ -56,7 +56,7 @@ export default function About() {
           <div className="about-image">
             <Image 
               src="/images/villa2.jpg" 
-              alt="Dieng Villa Luxury"
+              alt="Villa Dieng Luxury"
               width={1000}
               height={500}
             />

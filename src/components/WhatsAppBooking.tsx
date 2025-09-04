@@ -5,12 +5,12 @@ interface WhatsAppButtonProps {
   guestCount?: number;
 }
 
-export default function WhatsAppBooking({ villaName = 'Dieng Villa Luxury', guestCount = 2 }: WhatsAppButtonProps) {
+export default function WhatsAppBooking({ villaName = 'Villa Dieng Luxury', guestCount = 2 }: WhatsAppButtonProps) {
   const handleDirectWhatsApp = () => {
     // Default message for direct WhatsApp access
-    const defaultMessage = `🏖️ *DIENG VILLA LUXURY - BOOKING INQUIRY*
+    const defaultMessage = `🏖️ *VILLA DIENG LUXURY - BOOKING INQUIRY*
 
-Halo! Saya tertarik untuk booking villa di Dieng Villa Luxury.
+Halo! Saya tertarik untuk booking villa di Villa Dieng Luxury.
 
 Mohon informasi mengenai:
 • Ketersediaan villa

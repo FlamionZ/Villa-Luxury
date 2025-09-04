@@ -109,7 +109,7 @@ export default function BookingsPage() {
       {/* Sidebar */}
       <div className="admin-sidebar">
         <div className="sidebar-header">
-          <h2><i className="fas fa-hotel"></i> Dieng Villa Luxury</h2>
+          <h2><i className="fas fa-hotel"></i> Villa Dieng Luxury</h2>
           <p>Admin Dashboard</p>
         </div>
         
