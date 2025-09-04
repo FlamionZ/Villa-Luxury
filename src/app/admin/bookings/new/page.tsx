@@ -350,7 +350,7 @@ export default function NewBookingPage() {
                       value={formData.guest_phone}
                       onChange={handleInputChange}
                       className={`form-control ${errors.guest_phone ? 'error' : ''}`}
-                      placeholder="+62 812-3456-7890"
+                      placeholder="+62 822-3489-8455"
                       required
                     />
                     {errors.guest_phone && <span className="error-message">{errors.guest_phone}</span>}

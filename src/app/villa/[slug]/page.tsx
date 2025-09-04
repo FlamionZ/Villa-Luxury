@@ -103,7 +103,7 @@ export default function VillaDetailPage() {
 
   const handleBookNow = () => {
     const message = `Halo, saya tertarik untuk memesan ${villa.title} dengan harga Rp ${formatRupiahNumber(villa.price)}/malam. Bisakah Anda memberikan informasi lebih lanjut?`;
-    const whatsappUrl = `https://wa.me/6281234567890?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/+6282234898455?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 

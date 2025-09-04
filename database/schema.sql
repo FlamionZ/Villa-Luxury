@@ -148,7 +148,7 @@ INSERT INTO admin_users (username, email, password_hash, role) VALUES
 INSERT INTO site_settings (setting_key, setting_value, setting_type, description) VALUES
 ('site_name', 'Dieng Villa Luxury', 'text', 'Website name'),
 ('site_description', 'Pengalaman Villa Mewah yang Tak Terlupakan', 'text', 'Website description'),
-('contact_phone', '+62 812-3456-7890', 'text', 'Contact phone number'),
+('contact_phone', '+62 822-3489-8455', 'text', 'Contact phone number'),
 ('contact_email', 'villadiengluxury@gmail.com', 'text', 'Contact email'),
 ('whatsapp_number', '+6282234898455', 'text', 'WhatsApp number for booking'),
 ('booking_advance_days', '365', 'number', 'How many days in advance booking can be made'),
