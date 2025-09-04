@@ -14,26 +14,23 @@ export const contentType = 'image/png'
 export default function AppleIcon() {
   return new ImageResponse(
     (
-      // SVG/JSX logo here
       <div
         style={{
           fontSize: 120,
-          background: '#2d5016',
+          background: 'transparent',
           width: '100%',
           height: '100%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: '#d4a574',
-          borderRadius: '20px',
-          fontWeight: 'bold',
-          fontFamily: 'serif',
+          backgroundSize: 'contain',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
         }}
       >
-        V
+        {/* Logo will be loaded from static files */}
       </div>
     ),
-    // ImageResponse options
     {
       ...size,
     }
