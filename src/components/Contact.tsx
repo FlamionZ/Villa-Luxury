@@ -28,7 +28,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <h4>Telepon</h4>
-                  <p>+62 361 123 4567<br/>+62 812 3456 7890</p>
+                  <p>+62 822 3489 8455</p>
                 </div>
               </div>
               <div className="contact-item">
@@ -37,7 +37,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <h4>Email</h4>
-                  <p>info@villaluxury.com<br/>reservation@villaluxury.com</p>
+                  <p>villadiengluxury@gmail.com</p>
                 </div>
               </div>
             </div>
@@ -49,7 +49,7 @@ export default function Contact() {
               
               <div className="contact-buttons">
                 <a 
-                  href="https://wa.me/6281234567890?text=Halo,%20saya%20tertarik%20untuk%20reservasi%20villa"
+                  href="https://wa.me/+6282234898455?text=Halo,%20saya%20tertarik%20untuk%20reservasi%20villa"
                   className="btn btn-whatsapp"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -59,7 +59,7 @@ export default function Contact() {
                 </a>
                 
                 <a 
-                  href="tel:+6281234567890"
+                  href="tel:+6282234898455"
                   className="btn btn-phone"
                 >
                   <i className="fas fa-phone"></i>
@@ -67,7 +67,7 @@ export default function Contact() {
                 </a>
                 
                 <a 
-                  href="mailto:info@villaluxury.com"
+                  href="mailto:villadiengluxury@gmail.com"
                   className="btn btn-email"
                 >
                   <i className="fas fa-envelope"></i>

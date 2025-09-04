@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { formatRupiahNumber } from '@/lib/utils';
+import { getPriceRange } from '@/lib/pricing';
 
 interface Villa {
   id: number;
@@ -12,6 +13,9 @@ interface Villa {
   title: string;
   description: string;
   price: number;
+  weekday_price?: number;
+  weekend_price?: number;
+  high_season_price?: number;
   location: string;
   max_guests: number;
   status: 'active' | 'inactive';
@@ -206,8 +210,26 @@ export default function VillasPage() {
                     </div>
 
                     <div className="villa-price">
-                      <span className="price">Rp {formatRupiahNumber(villa.price || 0)}</span>
-                      <span className="period">/malam</span>
+                      {villa.weekday_price && villa.weekend_price && villa.high_season_price ? (
+                        <>
+                          <span className="price">
+                            Rp {formatRupiahNumber(villa.weekday_price)} - {formatRupiahNumber(villa.high_season_price)}
+                          </span>
+                          <span className="period">/malam</span>
+                          <div className="price-breakdown">
+                            <small>
+                              Weekday: Rp {formatRupiahNumber(villa.weekday_price)} • 
+                              Weekend: Rp {formatRupiahNumber(villa.weekend_price)} • 
+                              High Season: Rp {formatRupiahNumber(villa.high_season_price)}
+                            </small>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <span className="price">Rp {formatRupiahNumber(villa.price || 0)}</span>
+                          <span className="period">/malam</span>
+                        </>
+                      )}
                     </div>
 
                     <div className="villa-actions">

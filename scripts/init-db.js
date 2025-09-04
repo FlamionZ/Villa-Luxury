@@ -111,7 +111,7 @@ DB_NAME=villa_paradise
     console.log('\n🎉 Setup Complete!');
     console.log('📊 Admin Dashboard: http://localhost:3000/admin');
     console.log('🔑 Default admin credentials:');
-    console.log('   Username: admin');
+    console.log('   Username: Villadiengluxury');
     console.log('   Password: admin123');
     console.log('\n💡 Next steps:');
     console.log('   1. Run: npm run dev');

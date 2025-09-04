@@ -8,7 +8,10 @@ interface VillaFormData {
   title: string;
   description: string;
   long_description?: string;
-  price: number;
+  weekday_price: number;
+  weekend_price: number;
+  high_season_price: number;
+  price?: number; // backward compatibility
   location: string;
   max_guests: number;
   status?: string;
@@ -23,7 +26,10 @@ interface VillaRow extends RowDataPacket {
   title: string;
   description: string;
   long_description?: string;
-  price: number;
+  weekday_price: number;
+  weekend_price: number;
+  high_season_price: number;
+  price?: number; // backward compatibility
   location: string;
   max_guests: number;
   status: string;
@@ -102,7 +108,7 @@ export async function POST(request: NextRequest) {
 
     const body: VillaFormData = await request.json();
     const {
-      slug, title, description, long_description, price, location, max_guests, status,
+      slug, title, description, long_description, weekday_price, weekend_price, high_season_price, price, location, max_guests, status,
       amenities, features, images
     } = body;
 
@@ -111,9 +117,9 @@ export async function POST(request: NextRequest) {
     try {
       // Insert villa
       const [result] = await connection.execute<ResultSetHeader>(
-        `INSERT INTO villa_types (slug, title, description, long_description, price, location, max_guests, status)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-        [slug, title, description, long_description || '', price, location, max_guests, status || 'active']
+        `INSERT INTO villa_types (slug, title, description, long_description, weekday_price, weekend_price, high_season_price, location, max_guests, status)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [slug, title, description, long_description || '', weekday_price, weekend_price, high_season_price, location, max_guests, status || 'active']
       );
 
       const villaId = result.insertId;

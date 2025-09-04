@@ -194,19 +194,19 @@ async function setupPlanetScaleDatabase() {
     }
 
     // Create default admin user if not exists
-    const [adminCount] = await connection.execute("SELECT COUNT(*) as count FROM admin_users WHERE username = 'admin'");
+    const [adminCount] = await connection.execute("SELECT COUNT(*) as count FROM admin_users WHERE username = 'Villadiengluxury'");
     if (adminCount[0].count === 0) {
       const bcrypt = require('bcryptjs');
-      const hashedPassword = await bcrypt.hash(process.env.ADMIN_DEFAULT_PASSWORD || 'admin123', 10);
+      const hashedPassword = await bcrypt.hash(process.env.ADMIN_DEFAULT_PASSWORD || 'Mandadanyumna', 10);
       
       await connection.execute(`
         INSERT INTO admin_users (username, password_hash, email, full_name, role)
         VALUES (?, ?, ?, ?, ?)
-      `, ['admin', hashedPassword, 'admin@villaluxury.com', 'Administrator', 'super_admin']);
+      `, ['Villadiengluxury', hashedPassword, 'villadiengluxury@gmail.com', 'Administrator', 'super_admin']);
       
       console.log('✅ Default admin user created!');
-      console.log('   Username: admin');
-      console.log('   Password: ' + (process.env.ADMIN_DEFAULT_PASSWORD || 'admin123'));
+      console.log('   Username: Villadiengluxury');
+      console.log('   Password: ' + (process.env.ADMIN_DEFAULT_PASSWORD || 'Mandadanyumna'));
     }
 
     console.log('🎉 PlanetScale database setup completed successfully!');

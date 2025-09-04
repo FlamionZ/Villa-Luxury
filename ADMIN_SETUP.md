@@ -52,7 +52,7 @@ Open your browser and navigate to:
 - Admin Dashboard: http://localhost:3000/admin
 
 **Default Admin Credentials:**
-- Username: admin
+- Username: Villadiengluxury
 - Password: admin123
 
 ## Features

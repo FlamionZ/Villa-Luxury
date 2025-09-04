@@ -20,7 +20,7 @@ Mohon informasi mengenai:
 
 Terima kasih! 🙏`;
 
-    const whatsappUrl = `https://wa.me/6281234567890?text=${encodeURIComponent(defaultMessage)}`;
+    const whatsappUrl = `https://wa.me/+6282234898455?text=${encodeURIComponent(defaultMessage)}`;
     window.open(whatsappUrl, '_blank');
   };
 

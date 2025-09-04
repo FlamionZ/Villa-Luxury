@@ -10,7 +10,9 @@ interface VillaFormData {
   title: string;
   description: string;
   long_description: string;
-  price: number;
+  weekday_price: number;
+  weekend_price: number;
+  high_season_price: number;
   location: string;
   max_guests: number;
   status: 'active' | 'inactive';
@@ -39,7 +41,9 @@ export default function VillaForm({ villaId, isEdit = false }: VillaFormProps) {
     title: '',
     description: '',
     long_description: '',
-    price: 0,
+    weekday_price: 0,
+    weekend_price: 0,
+    high_season_price: 0,
     location: '',
     max_guests: 2,
     status: 'active',
@@ -65,7 +69,9 @@ export default function VillaForm({ villaId, isEdit = false }: VillaFormProps) {
           title: data.data.title,
           description: data.data.description,
           long_description: data.data.long_description,
-          price: data.data.price,
+          weekday_price: data.data.weekday_price || data.data.price || 0,
+          weekend_price: data.data.weekend_price || data.data.price || 0,
+          high_season_price: data.data.high_season_price || data.data.price || 0,
           location: data.data.location,
           max_guests: data.data.max_guests,
           status: data.data.status,
@@ -359,26 +365,73 @@ export default function VillaForm({ villaId, isEdit = false }: VillaFormProps) {
                 />
               </div>
 
-              <div className="form-row">
+              {/* Pricing Section */}
+              <div className="form-section">
+                <h3>Pengaturan Harga</h3>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Harga Weekday (Senin-Jumat) *</label>
+                    <input
+                      type="number"
+                      value={formData.weekday_price}
+                      onChange={(e) => setFormData(prev => ({ ...prev, weekday_price: Number(e.target.value) }))}
+                      className="form-control"
+                      min="100000"
+                      step="50000"
+                      placeholder="contoh: 2000000"
+                      required
+                    />
+                    {formData.weekday_price > 0 && (
+                      <small className="text-muted">
+                        Format: Rp {formatRupiahNumber(formData.weekday_price)}/malam
+                      </small>
+                    )}
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Harga Weekend (Sabtu-Minggu) *</label>
+                    <input
+                      type="number"
+                      value={formData.weekend_price}
+                      onChange={(e) => setFormData(prev => ({ ...prev, weekend_price: Number(e.target.value) }))}
+                      className="form-control"
+                      min="100000"
+                      step="50000"
+                      placeholder="contoh: 2500000"
+                      required
+                    />
+                    {formData.weekend_price > 0 && (
+                      <small className="text-muted">
+                        Format: Rp {formatRupiahNumber(formData.weekend_price)}/malam
+                      </small>
+                    )}
+                  </div>
+                </div>
+                
                 <div className="form-group">
-                  <label>Harga per Malam (Rp) *</label>
+                  <label>Harga High Season (Tanggal Merah & Libur Nasional) *</label>
                   <input
                     type="number"
-                    value={formData.price}
-                    onChange={(e) => setFormData(prev => ({ ...prev, price: Number(e.target.value) }))}
+                    value={formData.high_season_price}
+                    onChange={(e) => setFormData(prev => ({ ...prev, high_season_price: Number(e.target.value) }))}
                     className="form-control"
                     min="100000"
                     step="50000"
-                    placeholder="contoh: 2500000"
+                    placeholder="contoh: 3000000"
                     required
                   />
-                  {formData.price > 0 && (
+                  {formData.high_season_price > 0 && (
                     <small className="text-muted">
-                      Format: Rp {formatRupiahNumber(formData.price)}/malam
+                      Format: Rp {formatRupiahNumber(formData.high_season_price)}/malam
                     </small>
                   )}
+                  <small className="text-info">
+                    <i className="fas fa-info-circle"></i> High season berlaku untuk hari libur nasional dan tanggal merah
+                  </small>
                 </div>
-                
+              </div>
+
+              <div className="form-row">
                 <div className="form-group">
                   <label>Max Guests *</label>
                   <input

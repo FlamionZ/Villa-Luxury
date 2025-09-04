@@ -9,6 +9,9 @@ interface VillaDetail extends RowDataPacket {
   description: string;
   long_description: string;
   price: number;
+  weekday_price: number;
+  weekend_price: number;
+  high_season_price: number;
   location: string;
   size: string;
   max_guests: number;
@@ -95,6 +98,9 @@ export async function GET(
       description: villa.description,
       longDescription: villa.long_description || villa.description,
       price: villa.price,
+      weekday_price: villa.weekday_price,
+      weekend_price: villa.weekend_price,
+      high_season_price: villa.high_season_price,
       images: images,
       amenities: amenities,
       features: features,

@@ -140,17 +140,17 @@ INSERT INTO villa_features (villa_id, feature_text) VALUES
 (3, 'Office space dengan meeting room'),
 (3, 'Helicopter landing pad access');
 
--- Insert default admin user (username: admin, password: admin123)
+-- Insert default admin user (username: Villadiengluxury, password: Mandadanyumna)
 INSERT INTO admin_users (username, email, password_hash, role) VALUES 
-('admin', 'admin@villaparadise.com', '$2b$10$rOoF.LrK8jgQlv9/7qJ.4uLOWGQfN1M2Oj7VnDqX3yJm8Wz4X.Yg6', 'super_admin');
+('Villadiengluxury', 'villadiengluxury@gmail.com', '$2b$10$ZPqZl.wigwtV8NL3JU50u.REDFnRcBPoRF1xNkwEFCA5MFeRD9iUy', 'super_admin');
 
 -- Insert site settings
 INSERT INTO site_settings (setting_key, setting_value, setting_type, description) VALUES
 ('site_name', 'Dieng Villa Luxury', 'text', 'Website name'),
 ('site_description', 'Pengalaman Villa Mewah yang Tak Terlupakan', 'text', 'Website description'),
 ('contact_phone', '+62 812-3456-7890', 'text', 'Contact phone number'),
-('contact_email', 'info@villaparadise.com', 'text', 'Contact email'),
-('whatsapp_number', '6281234567890', 'text', 'WhatsApp number for booking'),
+('contact_email', 'villadiengluxury@gmail.com', 'text', 'Contact email'),
+('whatsapp_number', '+6282234898455', 'text', 'WhatsApp number for booking'),
 ('booking_advance_days', '365', 'number', 'How many days in advance booking can be made'),
 ('min_booking_nights', '1', 'number', 'Minimum nights for booking'),
 ('max_booking_nights', '30', 'number', 'Maximum nights for booking');

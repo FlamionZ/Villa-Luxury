@@ -4,7 +4,10 @@ export interface VillaType {
   title: string;
   description: string;
   long_description: string;
-  price: number;
+  weekday_price: number;
+  weekend_price: number;
+  high_season_price: number;
+  price?: number; // backward compatibility
   location: string;
   max_guests: number;
   status: 'active' | 'inactive';
@@ -94,7 +97,9 @@ export interface VillaFormData {
   title: string;
   description: string;
   long_description: string;
-  price: number;
+  weekday_price: number;
+  weekend_price: number;
+  high_season_price: number;
   location: string;
   max_guests: number;
   status: 'active' | 'inactive';

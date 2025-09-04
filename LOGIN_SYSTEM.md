@@ -41,7 +41,7 @@ http://localhost:3000/admin/login
 
 ### **2. Default Credentials**
 ```
-Username: admin
+Username: Villadiengluxury
 Password: admin123
 ```
 

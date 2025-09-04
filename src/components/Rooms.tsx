@@ -5,13 +5,17 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import BookingCalendar from './BookingCalendar';
 import { formatRupiahNumber } from '@/lib/utils';
+import { getPriceRange } from '@/lib/pricing';
 
 interface Villa {
   id: number;
   title: string;
   slug: string;
   description: string;
-  price: number;
+  price: number; // backward compatibility
+  weekday_price?: number;
+  weekend_price?: number;
+  high_season_price?: number;
   image: string;
   amenities: Array<{icon: string, text: string}>;
   features: string[];
@@ -145,7 +149,25 @@ export default function Rooms() {
                   width={800}
                   height={250}
                 />
-                <div className="room-price">Rp {formatRupiahNumber(villa.price || 0)}/malam</div>
+                <div className="room-price">
+                  {villa.weekday_price && villa.weekend_price && villa.high_season_price ? (
+                    (() => {
+                      const priceRange = getPriceRange({
+                        weekday_price: villa.weekday_price,
+                        weekend_price: villa.weekend_price,
+                        high_season_price: villa.high_season_price
+                      });
+                      return (
+                        <>
+                          <span className="price-range">Rp {formatRupiahNumber(priceRange.min)} - {formatRupiahNumber(priceRange.max)}</span>
+                          <small className="price-note">/malam</small>
+                        </>
+                      );
+                    })()
+                  ) : (
+                    <>Rp {formatRupiahNumber(villa.price || 0)}<small>/malam</small></>
+                  )}
+                </div>
               </div>
               <div className="room-content">
                 <h3 className="room-title">{villa.title || 'Villa'}</h3>

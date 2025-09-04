@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import BookingCalendar from '@/components/BookingCalendar';
 import { formatRupiahNumber } from '@/lib/utils';
+import { getPriceRange, getUpcomingHighSeasonDates } from '@/lib/pricing';
 import { useState, useEffect } from 'react';
 
 interface VillaData {
@@ -14,6 +15,9 @@ interface VillaData {
   description: string;
   longDescription: string;
   price: number;
+  weekday_price?: number;
+  weekend_price?: number;
+  high_season_price?: number;
   images: string[];
   amenities: Array<{icon: string, text: string}>;
   features: string[];
@@ -43,7 +47,21 @@ export default function VillaDetailPage() {
         const data = await response.json();
         
         if (data.success) {
-          setVilla(data.data);
+          // Add test pricing data if not available
+          const villaData = {
+            ...data.data,
+            weekday_price: data.data.weekday_price || 2500000,
+            weekend_price: data.data.weekend_price || 3000000,
+            high_season_price: data.data.high_season_price || 3750000
+          };
+          
+          setVilla(villaData);
+          console.log("Villa data loaded:", villaData);
+          console.log("Has pricing data:", {
+            weekday: villaData.weekday_price,
+            weekend: villaData.weekend_price,
+            high_season: villaData.high_season_price
+          });
         } else {
           setError(data.message || 'Villa tidak ditemukan');
         }
@@ -239,8 +257,62 @@ export default function VillaDetailPage() {
                     }}
                     selectedCheckIn={selectedCheckIn}
                     selectedCheckOut={selectedCheckOut}
+                    villaPricing={villa.weekday_price && villa.weekend_price && villa.high_season_price ? {
+                      weekday_price: villa.weekday_price,
+                      weekend_price: villa.weekend_price,
+                      high_season_price: villa.high_season_price
+                    } : undefined}
+                    showPricing={!!(villa.weekday_price && villa.weekend_price && villa.high_season_price)}
                   />
                 </div>
+                
+                {/* Pricing Information */}
+                {villa.weekday_price && villa.weekend_price && villa.high_season_price && (
+                  <div className="pricing-info">
+                    <h3>Informasi Harga</h3>
+                    <div className="pricing-legend">
+                      <div className="pricing-item">
+                        <div className="price-indicator weekday"></div>
+                        <div className="price-details">
+                          <span className="price-category">Weekday (Sen-Jum)</span>
+                          <span className="price-value">Rp {formatRupiahNumber(villa.weekday_price)}</span>
+                        </div>
+                      </div>
+                      <div className="pricing-item">
+                        <div className="price-indicator weekend"></div>
+                        <div className="price-details">
+                          <span className="price-category">Weekend (Sab-Min)</span>
+                          <span className="price-value">Rp {formatRupiahNumber(villa.weekend_price)}</span>
+                        </div>
+                      </div>
+                      <div className="pricing-item">
+                        <div className="price-indicator high-season"></div>
+                        <div className="price-details">
+                          <span className="price-category">High Season</span>
+                          <span className="price-value">Rp {formatRupiahNumber(villa.high_season_price)}</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Upcoming High Season Dates */}
+                    <div className="upcoming-high-season">
+                      <h4>Tanggal High Season Mendatang</h4>
+                      <div className="high-season-dates">
+                        {getUpcomingHighSeasonDates(3).map((holiday, index) => (
+                          <div key={index} className="holiday-item">
+                            <i className="fas fa-calendar-star"></i>
+                            <span>{holiday.name}</span>
+                            <small>{new Date(holiday.date).toLocaleDateString('id-ID', { 
+                              weekday: 'short', 
+                              day: 'numeric', 
+                              month: 'short' 
+                            })}</small>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -249,8 +321,35 @@ export default function VillaDetailPage() {
               <div className="booking-card">
                 <div className="booking-card-header">
                   <div className="booking-price">
-                    <span className="price-amount">Rp {formatRupiahNumber(villa.price)}</span>
-                    <span className="price-period">/malam</span>
+                    {villa.weekday_price && villa.weekend_price && villa.high_season_price ? (
+                      (() => {
+                        const priceRange = getPriceRange({
+                          weekday_price: villa.weekday_price,
+                          weekend_price: villa.weekend_price,
+                          high_season_price: villa.high_season_price
+                        });
+                        return (
+                          <>
+                            <span className="price-amount">
+                              Rp {formatRupiahNumber(priceRange.min)} - {formatRupiahNumber(priceRange.max)}
+                            </span>
+                            <span className="price-period">/malam</span>
+                            <div className="price-breakdown">
+                              <small>
+                                Weekday: Rp {formatRupiahNumber(villa.weekday_price)} • 
+                                Weekend: Rp {formatRupiahNumber(villa.weekend_price)} • 
+                                High Season: Rp {formatRupiahNumber(villa.high_season_price)}
+                              </small>
+                            </div>
+                          </>
+                        );
+                      })()
+                    ) : (
+                      <>
+                        <span className="price-amount">Rp {formatRupiahNumber(villa.price)}</span>
+                        <span className="price-period">/malam</span>
+                      </>
+                    )}
                   </div>
                 </div>
                 
@@ -285,15 +384,15 @@ export default function VillaDetailPage() {
               <div className="contact-card">
                 <h3>Butuh Bantuan?</h3>
                 <div className="contact-methods">
-                  <a href="tel:+6281234567890" className="contact-method">
+                  <a href="tel:+6282234898455" className="contact-method">
                     <i className="fas fa-phone"></i>
-                    <span>+62 812-3456-7890</span>
+                    <span>+62 822-3489-8455</span>
                   </a>
-                  <a href="mailto:info@villaparadise.com" className="contact-method">
+                  <a href="mailto:villadiengluxury@gmail.com" className="contact-method">
                     <i className="fas fa-envelope"></i>
-                    <span>info@villaparadise.com</span>
+                    <span>villadiengluxury@gmail.com</span>
                   </a>
-                  <a href="https://wa.me/6281234567890" className="contact-method" target="_blank">
+                  <a href="https://wa.me/+6282234898455" className="contact-method" target="_blank">
                     <i className="fab fa-whatsapp"></i>
                     <span>WhatsApp Chat</span>
                   </a>

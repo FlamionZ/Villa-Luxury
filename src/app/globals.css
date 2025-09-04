@@ -1214,6 +1214,63 @@ section {
     opacity: 0.6;
 }
 
+/* Pricing categories */
+.calendar-day.price-weekday {
+    border-left: 4px solid #28a745;
+}
+
+.calendar-day.price-weekend {
+    border-left: 4px solid #ffc107;
+}
+
+.calendar-day.price-high-season {
+    border-left: 4px solid #dc3545;
+}
+
+/* Calendar day structure for pricing */
+.calendar-day {
+    flex-direction: column;
+    padding: 2px;
+    line-height: 1;
+}
+
+.day-number {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.day-price {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #666;
+    margin-top: 2px;
+    line-height: 1;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 4px;
+    padding: 1px 2px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.calendar-day.price-weekday .day-price {
+    color: #155724;
+    background: rgba(40, 167, 69, 0.1);
+    border-color: rgba(40, 167, 69, 0.2);
+}
+
+.calendar-day.price-weekend .day-price {
+    color: #b45309;
+    background: rgba(253, 126, 20, 0.1);
+    border-color: rgba(253, 126, 20, 0.2);
+}
+
+.calendar-day.price-high-season .day-price {
+    color: #721c24;
+    background: rgba(220, 53, 69, 0.1);
+    border-color: rgba(220, 53, 69, 0.2);
+}
+
 .booking-indicator {
     position: absolute;
     top: 2px;
@@ -1232,6 +1289,147 @@ section {
     border-radius: 12px;
     border: 1px solid #e9ecef;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+/* Pricing Legend for Calendar */
+.pricing-legend-calendar {
+    margin-top: 25px;
+    padding: 20px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 15px;
+    border: 2px solid #e9ecef;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.pricing-legend-calendar h4 {
+    margin: 0 0 15px 0;
+    color: #495057;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+    font-family: var(--font-montserrat), sans-serif;
+}
+
+.pricing-categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.pricing-category-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.pricing-category-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.pricing-category-item.weekday {
+    border-left: 4px solid #28a745;
+}
+
+.pricing-category-item.weekend {
+    border-left: 4px solid #fd7e14;
+}
+
+.pricing-category-item.high-season {
+    border-left: 4px solid #dc3545;
+}
+
+.category-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.pricing-category-item.weekday .category-indicator {
+    background: #28a745;
+}
+
+.pricing-category-item.weekend .category-indicator {
+    background: #fd7e14;
+}
+
+.pricing-category-item.high-season .category-indicator {
+    background: #dc3545;
+}
+
+.category-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.category-name {
+    font-size: 0.85rem;
+    color: #6c757d;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.category-price {
+    font-size: 1rem;
+    color: #495057;
+    font-weight: 600;
+    font-family: var(--font-montserrat), sans-serif;
+}
+
+.pricing-note {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #6c757d;
+    text-align: center;
+    font-style: italic;
+    padding: 10px;
+    background: rgba(13, 110, 253, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(13, 110, 253, 0.1);
+}
+
+.pricing-note i {
+    color: #0d6efd;
+    margin-right: 5px;
+}
+
+/* Mobile responsive for pricing legend */
+@media (max-width: 768px) {
+    .pricing-categories {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .pricing-category-item {
+        padding: 10px 12px;
+        gap: 10px;
+    }
+    
+    .category-name {
+        font-size: 0.8rem;
+    }
+    
+    .category-price {
+        font-size: 0.9rem;
+    }
+    
+    .pricing-note {
+        font-size: 0.75rem;
+        padding: 8px;
+    }
+    
+    .day-price {
+        font-size: 0.6rem;
+        padding: 0px 1px;
+    }
 }
 
 .legend-item {
@@ -2744,6 +2942,164 @@ section {
   font-size: 1.1rem;
   line-height: 1.8;
   color: #555;
+}
+
+/* Pricing Information */
+.pricing-info {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 15px;
+  padding: 25px;
+  margin: 30px 0;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.pricing-info h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.pricing-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.pricing-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 15px;
+  background: white;
+  border-radius: 10px;
+  border-left: 4px solid #ddd;
+  transition: all 0.3s ease;
+}
+
+.pricing-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.price-indicator {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.price-indicator.weekday {
+  background: #28a745;
+}
+
+.pricing-item:has(.price-indicator.weekday) {
+  border-left-color: #28a745;
+}
+
+.price-indicator.weekend {
+  background: #ffc107;
+}
+
+.pricing-item:has(.price-indicator.weekend) {
+  border-left-color: #ffc107;
+}
+
+.price-indicator.high-season {
+  background: #dc3545;
+}
+
+.pricing-item:has(.price-indicator.high-season) {
+  border-left-color: #dc3545;
+}
+
+.price-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+}
+
+.price-category {
+  font-weight: 500;
+  color: #495057;
+  font-size: 0.95rem;
+}
+
+.price-value {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 1rem;
+}
+
+.upcoming-high-season {
+  border-top: 1px solid #dee2e6;
+  padding-top: 20px;
+}
+
+.upcoming-high-season h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.upcoming-high-season h4::before {
+  content: "🌟";
+  font-size: 1.2rem;
+}
+
+.high-season-dates {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.holiday-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: rgba(220, 53, 69, 0.05);
+  border-radius: 8px;
+  border-left: 3px solid #dc3545;
+}
+
+.holiday-item i {
+  color: #dc3545;
+  font-size: 0.9rem;
+}
+
+.holiday-item span {
+  flex: 1;
+  font-weight: 500;
+  color: #2c3e50;
+  font-size: 0.9rem;
+}
+
+.holiday-item small {
+  color: #6c757d;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.price-breakdown {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.price-breakdown small {
+  color: #e9ecef;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  display: block;
 }
 
 /* Amenities Grid */

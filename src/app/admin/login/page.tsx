@@ -109,13 +109,6 @@ export default function AdminLogin() {
             )}
           </button>
         </form>
-
-        <div className="login-footer">
-          <p>
-            <i className="fas fa-info-circle"></i>
-            Default credentials: admin / admin123
-          </p>
-        </div>
       </div>
 
       <div className="login-background">
