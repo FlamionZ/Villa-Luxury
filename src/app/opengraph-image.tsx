@@ -94,7 +94,7 @@ export default async function Image() {
               textShadow: '0 2px 4px rgba(0,0,0,0.5)',
             }}
           >
-            villadiengluxury.com
+            www.villadiengluxury.com
           </div>
         </div>
       </div>
