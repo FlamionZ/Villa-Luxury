@@ -9,6 +9,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://villadiengluxury.com'),
   title: "Villa Dieng Luxury - Penginapan Mewah di Dieng | Villa Paradise",
   description: "Villa eksklusif dengan pemandangan Dieng yang menakjubkan. Fasilitas lengkap, pemandangan pegunungan, dan layanan terbaik untuk pengalaman menginap yang tak terlupakan.",
   keywords: "villa dieng, penginapan dieng, villa luxury, villa dengan view pegunungan, akomodasi dieng, villa terbaik dieng",
@@ -18,14 +19,14 @@ export const metadata: Metadata = {
     description: "Villa mewah di Dieng dengan fasilitas lengkap dan pemandangan pegunungan yang memukau. Booking sekarang untuk pengalaman tak terlupakan!",
     type: "website",
     locale: "id_ID",
-    url: "https://villa-paradise-dieng.com",
-    siteName: "Villa Paradise Dieng",
+    url: "https://villadiengluxury.com",
+    siteName: "Villa Dieng Luxury",
     images: [
       {
-        url: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&h=630",
+        url: "https://villadiengluxury.com/images/villa2.jpg",
         width: 1200,
         height: 630,
-        alt: "Villa Paradise Dieng - Luxury Villa with Mountain View",
+        alt: "Villa Dieng Luxury - Villa Eksklusif dengan Pemandangan Menakjubkan",
       },
     ],
   },
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Villa Dieng Luxury - Villa Eksklusif di Dieng",
     description: "Villa mewah dengan pemandangan pegunungan Dieng yang menakjubkan. Fasilitas lengkap & layanan terbaik.",
-    images: ["https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&h=630"],
+    images: ["https://villadiengluxury.com/images/villa2.jpg"],
   },
   robots: {
     index: true,

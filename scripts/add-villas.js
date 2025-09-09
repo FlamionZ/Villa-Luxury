@@ -26,7 +26,7 @@ async function addMoreVillas() {
         description: 'Villa modern dengan kolam renang pribadi',
         long_description: 'Villa modern yang menakjubkan dengan kolam renang pribadi infinity, desain kontemporer, dan fasilitas mewah lengkap.',
         price: 3500000,
-        location: 'Seminyak, Bali',
+        location: 'Dieng Plateau, Banjarnegara',
         size: '180m²',
         max_guests: 4,
         status: 'inactive'
@@ -37,7 +37,7 @@ async function addMoreVillas() {
         description: 'Suite villa dengan taman yang indah',
         long_description: 'Suite villa yang dikelilingi taman tropis yang rimbun, memberikan pengalaman menginap yang tenang dan menyegarkan.',
         price: 2800000,
-        location: 'Ubud, Bali',
+        location: 'Batur Highland, Banjarnegara',
         size: '150m²',
         max_guests: 3,
         status: 'inactive'
@@ -48,7 +48,7 @@ async function addMoreVillas() {
         description: 'Villa tepi pantai dengan akses langsung ke beach',
         long_description: 'Villa mewah di tepi pantai dengan akses langsung ke pantai berpasir putih, pemandangan laut yang spektakuler.',
         price: 4200000,
-        location: 'Nusa Dua, Bali',
+        location: 'Sumberejo Valley, Banjarnegara',
         size: '220m²',
         max_guests: 6,
         status: 'inactive'
@@ -59,7 +59,7 @@ async function addMoreVillas() {
         description: 'Villa dengan pemandangan pegunungan yang spektakuler',
         long_description: 'Villa dengan arsitektur unik yang menawarkan pemandangan pegunungan dan lembah yang menakjubkan.',
         price: 3200000,
-        location: 'Bedugul, Bali',
+        location: 'Wonosobo Highland, Jawa Tengah',
         size: '190m²',
         max_guests: 5,
         status: 'inactive'
@@ -70,7 +70,7 @@ async function addMoreVillas() {
         description: 'Villa tropis di tengah keindahan alam',
         long_description: 'Villa tropis yang dikelilingi hamparan sawah dan hutan tropis, memberikan pengalaman liburan yang autentik.',
         price: 2900000,
-        location: 'Canggu, Bali',
+        location: 'Dieng Valley, Jawa Tengah',
         size: '170m²',
         max_guests: 4,
         status: 'inactive'

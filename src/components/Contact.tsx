@@ -19,7 +19,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <h4>Alamat</h4>
-                  <p>Jl. Gunung Indah No. 123<br/>Dieng, Wonosobo 80361</p>
+                  <p>Jl. Sumberejo Kidul, Sumberejo III<br/>Desa Sumberejo, Kec. Batur<br/>Kab. Banjarnegara, Jawa Tengah</p>
                 </div>
               </div>
               <div className="contact-item">

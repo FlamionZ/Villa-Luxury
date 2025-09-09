@@ -84,7 +84,7 @@ export default function Rooms() {
       maxGuests: 4,
       bedrooms: 2,
       bathrooms: 2,
-      location: "Seminyak",
+      location: "Dieng Plateau",
       status: "active"
     },
     {
@@ -103,7 +103,7 @@ export default function Rooms() {
       maxGuests: 6,
       bedrooms: 3,
       bathrooms: 3,
-      location: "Uluwatu",
+      location: "Batur Highland",
       status: "active"
     },
     {
@@ -122,7 +122,7 @@ export default function Rooms() {
       maxGuests: 8,
       bedrooms: 4,
       bathrooms: 4,
-      location: "Nusa Dua",
+      location: "Sumberejo Valley",
       status: "active"
     }
   ];
