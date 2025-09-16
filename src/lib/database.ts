@@ -1,48 +1,82 @@
 import mysql from 'mysql2/promise';
 
-let connection: mysql.Connection | null = null;
+// Use connection pool for better performance in serverless
+let pool: mysql.Pool | null = null;
 
 export async function getDbConnection(): Promise<mysql.Connection> {
-  if (connection) {
-    try {
-      // Test if connection is still alive
-      await connection.ping();
-      return connection;
-    } catch (_error) {
-      // Connection is dead, create a new one
-      connection = null;
-    }
-  }
-
   try {
-    // Always use individual env vars to avoid URL encoding issues with special characters
-    const config: mysql.ConnectionOptions = {
-      host: process.env.DB_HOST || 'localhost',
-      user: process.env.DB_USER || 'root',
-      password: process.env.DB_PASSWORD || '',
-      database: process.env.DB_NAME || 'villa_paradise',
-      port: parseInt(process.env.DB_PORT || '3306')
-    };
-
-    // Add SSL if connecting to SkySql/PlanetScale
-    if (process.env.DB_HOST?.includes('skysql.com')) {
-      config.ssl = {
-        rejectUnauthorized: false
+    console.log('Getting database connection...');
+    console.log('Environment variables check:', {
+      DB_HOST: !!process.env.DB_HOST,
+      DB_USER: !!process.env.DB_USER,
+      DB_PASSWORD: !!process.env.DB_PASSWORD,
+      DB_NAME: !!process.env.DB_NAME,
+      DB_PORT: !!process.env.DB_PORT
+    });
+    
+    if (!pool) {
+      console.log('Creating new database pool...');
+      
+      const config: mysql.PoolOptions = {
+        host: process.env.DB_HOST || 'localhost',
+        user: process.env.DB_USER || 'root',
+        password: process.env.DB_PASSWORD || '',
+        database: process.env.DB_NAME || 'villa_paradise',
+        port: parseInt(process.env.DB_PORT || '3306'),
+        connectionLimit: 5,
+        // Add these for better connection handling in serverless environment
+        dateStrings: true,
+        supportBigNumbers: true,
+        bigNumberStrings: true,
+        // Serverless optimization
+        idleTimeout: 300000
       };
+
+      // Add SSL if connecting to SkySql/PlanetScale or any cloud database
+      if (process.env.DB_HOST?.includes('skysql.com') || process.env.DB_HOST?.includes('planetscale.com') || process.env.NODE_ENV === 'production') {
+        config.ssl = {
+          rejectUnauthorized: false
+        };
+      }
+
+      console.log('Pool config:', {
+        host: config.host,
+        user: config.user,
+        database: config.database,
+        port: config.port,
+        ssl: !!config.ssl
+      });
+
+      pool = mysql.createPool(config);
+      console.log('Database pool created successfully');
     }
 
-    connection = await mysql.createConnection(config);
-
+    const connection = await pool.getConnection();
+    console.log('Connection acquired from pool');
+    
+    // Test the connection
+    await connection.ping();
+    console.log('Connection ping successful');
+    
     return connection;
   } catch (error) {
-    console.error('Database connection error:', error);
-    throw new Error('Failed to connect to database');
+    console.error('Database connection error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      code: (error as any)?.code,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      errno: (error as any)?.errno,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      sqlState: (error as any)?.sqlState,
+      stack: error instanceof Error ? error.stack : 'No stack trace'
+    });
+    throw new Error(`Failed to connect to database: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
 
 export async function closeDbConnection(): Promise<void> {
-  if (connection) {
-    await connection.end();
-    connection = null;
+  if (pool) {
+    await pool.end();
+    pool = null;
   }
 }
