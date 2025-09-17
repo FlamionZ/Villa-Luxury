@@ -1,65 +1,156 @@
-# Vercel Deployment Guide
+# Vercel Deployment Guide - Villa Dieng Luxury
 
-## 1. Setup Environment Variables di Vercel
+## 🚀 Complete Deployment Process
 
-Masuk ke dashboard Vercel dan tambahkan environment variables berikut:
+### 1. Environment Variables Setup
 
-### Database Configuration
-```
-DATABASE_URL=mysql://dbpgf28171728:YOUR_PASSWORD@serverless-us-central1.sysp0000.db2.skysql.com:4005/dbpgf28171728?sslmode=require
+Go to Vercel Dashboard → Your Project → Settings → Environment Variables and add:
+
+```bash
+# Database Configuration
 DB_HOST=serverless-us-central1.sysp0000.db2.skysql.com
 DB_USER=dbpgf28171728
-DB_PASSWORD=YOUR_PASSWORD
+DB_PASSWORD=7UGXOPGo*iXY3iqN6?Asi
 DB_NAME=dbpgf28171728
 DB_PORT=4005
+
+# Authentication
+NEXTAUTH_SECRET=fa1370786a68f8ef60ddcc1aa15d2d5da67a23fc6b2a622febfb6cc6130a7bf3
+NEXTAUTH_URL=https://www.villadiengluxury.com
+
+# Admin Configuration
+ADMIN_DEFAULT_PASSWORD=Mandadanyumna
+
+# Cloudinary (Image Upload)
+CLOUDINARY_CLOUD_NAME=dx1s8fbyp
+CLOUDINARY_API_KEY=198296466133379
+CLOUDINARY_API_SECRET=5r4DPsSIOERoH6raC0PFDFYmmuc
+
+# Environment
+NODE_ENV=production
 ```
 
-### Application Configuration
-```
-NEXTAUTH_SECRET=your-super-secret-key-at-least-32-characters
-NEXTAUTH_URL=https://your-app-name.vercel.app
-ADMIN_DEFAULT_PASSWORD=your-secure-admin-password
+### 2. Deploy Commands
+
+```bash
+git add .
+git commit -m "Deploy with enhanced debugging"
+git push origin main
 ```
 
-## 2. Deploy Steps
+### 3. Testing After Deployment
 
-1. **Push code ke GitHub:**
-   ```bash
-   git add .
-   git commit -m "Setup PlanetScale database integration"
-   git push origin main
+#### A. Test Database Connection
+1. Go to: `https://www.villadiengluxury.com/api/admin/debug/database`
+2. Login first, then access this endpoint
+3. Should return database connection test results
+
+#### B. Test Villa Creation
+1. Go to: `https://www.villadiengluxury.com/admin`
+2. Login: `Villadiengluxury` / `Mandadanyumna`
+3. Navigate to Villas → New Villa
+4. Fill required fields and submit
+
+### 4. Debugging Production Issues
+
+#### Check Vercel Function Logs:
+1. Vercel Dashboard → Your Project → Functions
+2. Click on `/api/admin/villas` function
+3. View real-time logs
+
+#### Expected Success Logs:
+```
+=== VILLA CREATION DEBUG START ===
+✅ ADMIN VERIFIED
+✅ REQUEST BODY PARSED
+✅ VALIDATION PASSED
+✅ DATABASE CONNECTION ESTABLISHED
+✅ CONNECTION TEST PASSED
+📝 INSERTING VILLA INTO DATABASE...
+✅ VILLA INSERTED SUCCESSFULLY
+🎉 VILLA CREATION COMPLETED SUCCESSFULLY
+```
+
+#### Common Error Patterns:
+
+**Database Connection Issues:**
+```
+❌ DATABASE CONNECTION ERROR
+Error code: ECONNREFUSED / ETIMEDOUT
+```
+**Solution:** Check DB_HOST, DB_PORT environment variables
+
+**Authentication Issues:**
+```
+❌ UNAUTHORIZED: Admin verification failed
+```
+**Solution:** Check NEXTAUTH_SECRET, verify login session
+
+**Missing Environment Variables:**
+```
+DB Config Check: { DB_HOST: 'NOT SET', ... }
+```
+**Solution:** Verify all environment variables in Vercel dashboard
+
+**SQL Errors:**
+```
+Error code: ER_NO_SUCH_TABLE
+```
+**Solution:** Database schema not created, run migration scripts
+
+### 5. Manual Database Check
+
+If villa creation fails, verify database manually:
+
+1. Connect to SkySql database
+2. Check tables exist:
+   ```sql
+   SHOW TABLES;
+   ```
+3. Verify structure:
+   ```sql
+   DESCRIBE villa_types;
    ```
 
-2. **Connect repository di Vercel:**
-   - Go to https://vercel.com/dashboard
-   - Click "New Project"
-   - Import your GitHub repository
-   - Add environment variables
-   - Deploy
+### 6. Emergency Fallback
 
-3. **Setup database setelah deploy:**
-   - Pastikan environment variables sudah diset
-   - Database schema akan otomatis dibuat saat pertama kali API dipanggil
-   - Atau jalankan setup manual via Vercel Functions
+If production issues persist:
 
-## 3. Database Features
+1. Check database status at SkySql dashboard
+2. Verify IP whitelist (Vercel uses dynamic IPs)
+3. Test with local environment using production DB
+4. Contact database provider if connection fails
 
-✅ **Serverless MySQL** dengan PlanetScale/SkySql
-✅ **SSL Connection** untuk keamanan
-✅ **Auto-scaling** sesuai traffic
-✅ **Connection pooling** otomatis
-✅ **Global edge locations**
+### 7. Performance Monitoring
 
-## 4. Monitor & Maintain
+- Monitor function execution time in Vercel
+- Check database connection pool metrics
+- Watch for timeout errors in logs
 
-- **Logs**: Monitor via Vercel dashboard
-- **Database**: Monitor via PlanetScale dashboard
-- **Performance**: Check Core Web Vitals di Vercel Analytics
+### 8. Domain Configuration
 
-## 5. Backup Strategy
+Ensure domain is properly configured:
+- Primary: `www.villadiengluxury.com`
+- Redirect: `villadiengluxury.com` → `www.villadiengluxury.com`
+- SSL certificate active
 
-Database di PlanetScale sudah include:
-- Automatic daily backups
-- Point-in-time recovery
-- Multi-region replication
-- 99.99% uptime SLA
+---
+
+## 🔧 Troubleshooting Checklist
+
+- [ ] All environment variables set in Vercel
+- [ ] Database connection test passes
+- [ ] Admin login working
+- [ ] Vercel function logs accessible
+- [ ] SSL certificate valid
+- [ ] Domain DNS properly configured
+
+---
+
+## 📞 Support
+
+If issues persist after following this guide:
+1. Export Vercel function logs
+2. Note exact error messages
+3. Check database provider status
+4. Test with different browsers/devices
