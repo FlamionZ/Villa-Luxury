@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# SEO optimization
+Allow: /villa/
+Allow: /api/gallery
+Allow: /sitemap.xml
+
+# Block admin and sensitive areas
+Disallow: /admin/
+Disallow: /api/admin/
+Disallow: /_next/
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://www.villadiengluxury.com/sitemap.xml
+Sitemap: https://villadiengluxury.com/sitemap.xml

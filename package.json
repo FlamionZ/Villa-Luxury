@@ -1,0 +1,50 @@
+{
+  "name": "villa-nextjs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "dev:safe": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "init-db": "node scripts/init-db.js",
+    "setup-db": "node scripts/setup-database.js",
+    "setup-planetscale": "node scripts/setup-planetscale.js",
+    "create-database": "node scripts/create-database.js",
+    "test-connection": "node scripts/test-connection.js",
+    "setup-gallery": "node scripts/setup-gallery.js",
+    "check-mysql": "scripts/check-mysql.bat",
+    "check-db": "node scripts/check-database-status.js",
+    "backup-db": "bash scripts/backup-database.sh",
+    "type-check": "tsc --noEmit",
+    "analyze": "ANALYZE=true npm run build",
+    "export": "next export"
+  },
+  "dependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/mysql": "^2.15.27",
+    "bcryptjs": "^3.0.2",
+    "cloudinary": "^2.7.0",
+    "critters": "^0.0.23",
+    "dotenv": "^17.2.1",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.0.2",
+    "mysql2": "^3.14.3",
+    "next": "15.4.6",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.4.6",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
