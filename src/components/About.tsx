@@ -41,8 +41,8 @@ export default function About() {
       if (ref) statsObserver.observe(ref);
     });
 
+    const currentRefs = statRefs.current;
     return () => {
-      const currentRefs = statRefs.current;
       currentRefs.forEach(ref => {
         if (ref) statsObserver.unobserve(ref);
       });
@@ -56,7 +56,7 @@ export default function About() {
           <div className="about-image">
             <Image 
               src="/images/villa2.jpg" 
-              alt="Villa Dieng Luxury"
+              alt="Yumna Villa Dieng"
               width={1000}
               height={500}
             />
@@ -74,10 +74,10 @@ export default function About() {
           <div className="about-content">
             <div className="section-header">
               <span className="section-subtitle">Tentang Kami</span>
-              <h2 className="section-title">Villa Dieng Luxury: Surga Tersembunyi di Dieng</h2>
+              <h2 className="section-title">Yumna Villa Dieng: Surga Tersembunyi di Dieng</h2>
             </div>
             <p className="about-description">
-              Villa Dieng Luxury adalah destinasi mewah yang terletak di jantung Dieng, menawarkan pengalaman menginap yang tak terlupakan. Dengan arsitektur modern yang memadukan sentuhan tradisional Jawa, kami memberikan kenyamanan terbaik untuk liburan Anda.
+              Yumna Villa Dieng adalah destinasi mewah yang terletak di jantung Dieng, menawarkan pengalaman menginap yang tak terlupakan. Dengan arsitektur modern yang memadukan sentuhan tradisional Jawa, kami memberikan kenyamanan terbaik untuk liburan Anda.
             </p>
             <div className="about-features">
               <div className="feature">

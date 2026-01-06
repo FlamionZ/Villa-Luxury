@@ -4,7 +4,7 @@ import { ImageResponse } from 'next/og'
 export const runtime = 'edge'
  
 // Image metadata
-export const alt = 'Villa Dieng Luxury - Villa Eksklusif dengan Pemandangan Menakjubkan'
+export const alt = 'Yumna Villa Dieng - Villa Eksklusif dengan Pemandangan Menakjubkan'
 export const size = {
   width: 1200,
   height: 630,
@@ -19,7 +19,7 @@ export default async function Image() {
       // ImageResponse JSX element
       <div
         style={{
-          background: 'linear-gradient(135deg, #2d5016 0%, #3d6b1f 100%)',
+          background: 'linear-gradient(135deg, #0f4c81 0%, #1d8cf8 100%)',
           width: '100%',
           height: '100%',
           display: 'flex',
@@ -59,12 +59,12 @@ export default async function Image() {
             style={{
               fontSize: 72,
               fontWeight: 'bold',
-              color: '#d4a574',
+              color: '#a5d8ff',
               marginBottom: 20,
               textShadow: '0 4px 8px rgba(0,0,0,0.5)',
             }}
           >
-            Villa Dieng Luxury
+            Yumna Villa Dieng
           </div>
           <div
             style={{
@@ -89,7 +89,7 @@ export default async function Image() {
             style={{
               fontSize: 28,
               marginTop: 20,
-              color: '#d4a574',
+              color: '#a5d8ff',
               fontWeight: 'bold',
               textShadow: '0 2px 4px rgba(0,0,0,0.5)',
             }}

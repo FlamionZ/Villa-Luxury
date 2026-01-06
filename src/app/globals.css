@@ -57,7 +57,7 @@ h1, h2, h3 {
 }
 
 .section-subtitle {
-    color: #b8860b;
+    color: #0f4c81;
     font-size: 14px;
     font-weight: 600;
     text-transform: uppercase;
@@ -104,15 +104,15 @@ h1, h2, h3 {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #b8860b, #daa520);
+    background: linear-gradient(135deg, #0f4c81, #2b6cb0);
     color: white;
-    border-color: #b8860b;
+    border-color: #0f4c81;
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, #daa520, #b8860b);
+    background: linear-gradient(135deg, #2b6cb0, #0f4c81);
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(184, 134, 11, 0.3);
+    box-shadow: 0 10px 30px rgba(15, 76, 129, 0.3);
 }
 
 .btn-secondary {
@@ -129,12 +129,12 @@ h1, h2, h3 {
 
 .btn-outline {
     background: transparent;
-    color: #b8860b;
-    border-color: #b8860b;
+    color: #0f4c81;
+    border-color: #0f4c81;
 }
 
 .btn-outline:hover {
-    background: #b8860b;
+    background: #0f4c81;
     color: white;
 }
 
@@ -171,7 +171,7 @@ h1, h2, h3 {
 }
 
 .nav-logo h2 {
-    color: #b8860b;
+    color: #0f4c81;
     font-size: 1.8rem;
     font-weight: 600;
     font-family: var(--font-montserrat), serif;
@@ -206,7 +206,7 @@ h1, h2, h3 {
 }
 
 .nav-link:hover {
-    color: #b8860b;
+    color: #0f4c81;
 }
 
 .nav-link::after {
@@ -216,7 +216,7 @@ h1, h2, h3 {
     left: 0;
     width: 0;
     height: 2px;
-    background: #b8860b;
+    background: #0f4c81;
     transition: width 0.3s ease;
 }
 
@@ -353,7 +353,7 @@ h1, h2, h3 {
 
 .section-subtitle {
     font-size: 1rem;
-    color: #b8860b;
+    color: #0f4c81;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 3px;
@@ -378,7 +378,7 @@ h1, h2, h3 {
     transform: translateX(-50%);
     width: 60px;
     height: 4px;
-    background: linear-gradient(90deg, #b8860b, #daa520);
+    background: linear-gradient(90deg, #0f4c81, #2b6cb0);
     border-radius: 2px;
 }
 
@@ -507,7 +507,7 @@ section {
 
 .stat h3 {
     font-size: 2rem;
-    color: #b8860b;
+    color: #0f4c81;
     margin-bottom: 5px;
 }
 
@@ -573,13 +573,13 @@ section {
 .feature:hover {
     background: rgba(255, 255, 255, 1);
     transform: translateX(10px);
-    box-shadow: 0 10px 30px rgba(184, 134, 11, 0.15);
-    border-color: rgba(184, 134, 11, 0.2);
+    box-shadow: 0 10px 30px rgba(15, 76, 129, 0.15);
+    border-color: rgba(15, 76, 129, 0.2);
 }
 
 .feature i {
     font-size: 2rem;
-    color: #b8860b;
+    color: #0f4c81;
     width: 50px;
     flex-shrink: 0;
 }
@@ -646,7 +646,7 @@ section {
     position: absolute;
     top: 20px;
     right: 20px;
-    background: rgba(184, 134, 11, 0.9);
+    background: rgba(15, 76, 129, 0.9);
     color: white;
     padding: 10px 20px;
     border-radius: 25px;
@@ -686,7 +686,7 @@ section {
 }
 
 .room-amenities i {
-    color: #b8860b;
+    color: #0f4c81;
 }
 
 .room-buttons {
@@ -718,30 +718,30 @@ section {
 }
 
 .room-buttons .btn-primary {
-    background: linear-gradient(135deg, #a8941f, #c9b037);
-    color: white;
-    border: none;
-    box-shadow: 0 4px 15px rgba(168, 148, 31, 0.4);
+  background: linear-gradient(135deg, #0f4c81, #2b6cb0);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 15px rgba(15, 76, 129, 0.35);
 }
 
 .room-buttons .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(168, 148, 31, 0.5);
-    background: linear-gradient(135deg, #96841c, #b8a032);
+  box-shadow: 0 6px 20px rgba(15, 76, 129, 0.45);
+  background: linear-gradient(135deg, #2b6cb0, #0f4c81);
 }
 
 .room-buttons .btn-outline {
-    background: transparent;
-    color: #a8941f;
-    border: 2px solid #a8941f;
-    box-shadow: 0 2px 10px rgba(168, 148, 31, 0.1);
+  background: transparent;
+  color: #0f4c81;
+  border: 2px solid #0f4c81;
+  box-shadow: 0 2px 10px rgba(15, 76, 129, 0.15);
 }
 
 .room-buttons .btn-outline:hover {
-    background: #a8941f;
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(168, 148, 31, 0.3);
+  background: #0f4c81;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(15, 76, 129, 0.25);
 }
 
 /* Room Detail */
@@ -890,7 +890,7 @@ section {
 .facility-icon {
     width: 80px;
     height: 80px;
-    background: linear-gradient(135deg, #b8860b, #daa520);
+    background: linear-gradient(135deg, #0f4c81, #2b6cb0);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -970,7 +970,7 @@ section {
 }
 
 .testimonial-stars {
-    color: #ffd700;
+    color: #1d8cf8;
     margin-bottom: 20px;
 }
 
@@ -1032,7 +1032,7 @@ section {
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
     margin: 40px auto;
     max-width: 480px;
-    border: 1px solid rgba(184, 134, 11, 0.08);
+    border: 1px solid rgba(15, 76, 129, 0.08);
     position: relative;
     overflow: hidden;
 }
@@ -1044,7 +1044,7 @@ section {
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, #b8860b 0%, #daa520 100%);
+    background: linear-gradient(90deg, #0f4c81 0%, #2b6cb0 100%);
 }
 
 .calendar-header {
@@ -1083,10 +1083,10 @@ section {
 }
 
 .calendar-nav:hover:not(:disabled) {
-    background: linear-gradient(135deg, #b8860b 0%, #daa520 100%);
+    background: linear-gradient(135deg, #0f4c81 0%, #2b6cb0 100%);
     color: white;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(184, 134, 11, 0.25);
+    box-shadow: 0 6px 20px rgba(15, 76, 129, 0.25);
     border-color: transparent;
 }
 
@@ -1193,18 +1193,18 @@ section {
 }
 
 .calendar-day.selected {
-    background: linear-gradient(135deg, #b8860b 0%, #daa520 100%);
+    background: linear-gradient(135deg, #0f4c81 0%, #2b6cb0 100%);
     color: white;
     border-color: transparent;
-    box-shadow: 0 4px 15px rgba(184, 134, 11, 0.35);
+    box-shadow: 0 4px 15px rgba(15, 76, 129, 0.35);
     transform: scale(1.05);
     font-weight: 600;
 }
 
 .calendar-day.in-range {
     background: linear-gradient(135deg, #fff8e1 0%, #ffe0b2 100%);
-    color: #b8860b;
-    border-color: rgba(184, 134, 11, 0.2);
+    color: #0f4c81;
+    border-color: rgba(15, 76, 129, 0.2);
 }
 
 .calendar-day.past {
@@ -1460,7 +1460,7 @@ section {
 }
 
 .legend-color.selected {
-    background: linear-gradient(135deg, #b8860b 0%, #daa520 100%);
+    background: linear-gradient(135deg, #0f4c81 0%, #2b6cb0 100%);
     border-color: transparent;
 }
 
@@ -1503,7 +1503,7 @@ section {
 .contact-icon {
     width: 50px;
     height: 50px;
-    background: linear-gradient(135deg, #b8860b, #daa520);
+    background: linear-gradient(135deg, #0f4c81, #2b6cb0);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -1619,7 +1619,7 @@ section {
     background: white;
     padding: 25px;
     border-radius: 15px;
-    border-left: 4px solid #b8860b;
+    border-left: 4px solid #0f4c81;
 }
 
 .operating-hours h4 {
@@ -1659,7 +1659,7 @@ section {
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #b8860b;
+    border-color: #0f4c81;
 }
 
 .form-group textarea {
@@ -1683,7 +1683,7 @@ section {
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(circle at 20% 80%, rgba(184, 134, 11, 0.1) 0%, transparent 50%),
+    background: radial-gradient(circle at 20% 80%, rgba(15, 76, 129, 0.1) 0%, transparent 50%),
                 radial-gradient(circle at 80% 20%, rgba(218, 165, 32, 0.08) 0%, transparent 50%);
     pointer-events: none;
 }
@@ -1701,7 +1701,7 @@ section {
 .footer-section h3 {
     font-size: 2rem;
     margin-bottom: 25px;
-    color: #b8860b;
+    color: #0f4c81;
     font-weight: 700;
     position: relative;
 }
@@ -1721,7 +1721,7 @@ section {
 .footer-logo h3 {
     font-size: 2rem;
     margin: 0;
-    color: #b8860b;
+    color: #0f4c81;
     font-weight: 700;
     position: relative;
 }
@@ -1733,14 +1733,14 @@ section {
     left: 0;
     width: 50px;
     height: 3px;
-    background: linear-gradient(90deg, #b8860b, #daa520);
+    background: linear-gradient(90deg, #0f4c81, #2b6cb0);
     border-radius: 2px;
 }
 
 .footer-section h4 {
     font-size: 1.3rem;
     margin-bottom: 20px;
-    color: #b8860b;
+    color: #0f4c81;
     font-weight: 600;
     position: relative;
 }
@@ -1752,7 +1752,7 @@ section {
     left: 0;
     width: 30px;
     height: 2px;
-    background: #b8860b;
+    background: #0f4c81;
     border-radius: 1px;
 }
 
@@ -1806,7 +1806,7 @@ section {
 
 .footer-section ul li a:hover,
 .footer-section ul li button:hover {
-    color: #b8860b;
+    color: #0f4c81;
     padding-left: 15px;
 }
 
@@ -1844,7 +1844,7 @@ section {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, #b8860b, #daa520);
+    background: linear-gradient(135deg, #0f4c81, #2b6cb0);
     border-radius: 50%;
     transform: scale(0);
     transition: transform 0.3s ease;
@@ -1853,7 +1853,7 @@ section {
 
 .social-links a:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(184, 134, 11, 0.3);
+    box-shadow: 0 8px 25px rgba(15, 76, 129, 0.3);
     color: white;
 }
 
@@ -1891,7 +1891,7 @@ section {
 .newsletter button {
     padding: 15px 25px;
     border: none;
-    background: linear-gradient(135deg, #b8860b, #daa520);
+    background: linear-gradient(135deg, #0f4c81, #2b6cb0);
     color: white;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -1901,7 +1901,7 @@ section {
 }
 
 .newsletter button:hover {
-    background: linear-gradient(135deg, #daa520, #b8860b);
+    background: linear-gradient(135deg, #2b6cb0, #0f4c81);
     transform: translateX(-2px);
 }
 
@@ -1937,7 +1937,7 @@ section {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(184, 134, 11, 0.1);
+    background: rgba(15, 76, 129, 0.1);
     border-radius: 15px;
     transform: scaleX(0);
     transition: transform 0.3s ease;
@@ -1945,7 +1945,7 @@ section {
 }
 
 .footer-links a:hover {
-    color: #b8860b;
+    color: #0f4c81;
 }
 
 .footer-links a:hover::before {
@@ -2131,7 +2131,7 @@ section {
     .footer-section ul li a:hover,
     .footer-section ul li button:hover {
         padding-left: 0;
-        color: #b8860b;
+        color: #0f4c81;
         text-align: center;
         transform: none;
     }
@@ -2404,7 +2404,7 @@ section {
 }
 
 .villa-price {
-  background: linear-gradient(135deg, #ffd700 0%, #ffed4a 100%);
+  background: linear-gradient(135deg, #1d8cf8 0%, #60a5fa 100%);
   color: #1a1a1a;
   padding: 6px 12px;
   border-radius: 15px;
@@ -2792,7 +2792,7 @@ section {
 }
 
 .villa-detail-breadcrumb a {
-  color: #c9b037;
+  color: #0f4c81;
   text-decoration: none;
 }
 
@@ -2836,7 +2836,7 @@ section {
 }
 
 .villa-detail-quick-info i {
-  color: #c9b037;
+  color: #0f4c81;
 }
 
 .villa-detail-price-section {
@@ -2850,7 +2850,7 @@ section {
 .villa-detail-price .price-amount {
   font-size: 3rem;
   font-weight: 700;
-  color: #c9b037;
+  color: #0f4c81;
 }
 
 .villa-detail-price .price-period {
@@ -2903,7 +2903,7 @@ section {
 
 .thumbnail:hover,
 .thumbnail.active {
-  border-color: #c9b037;
+  border-color: #0f4c81;
   transform: translateY(-2px);
 }
 
@@ -2934,7 +2934,7 @@ section {
   color: #2c3e50;
   margin-bottom: 20px;
   padding-bottom: 10px;
-  border-bottom: 3px solid #c9b037;
+  border-bottom: 3px solid #2b6cb0;
   display: inline-block;
 }
 
@@ -3127,7 +3127,7 @@ section {
 
 .amenity-item i {
   font-size: 1.3rem;
-  color: #c9b037;
+  color: #0f4c81;
   width: 25px;
   text-align: center;
 }
@@ -3186,7 +3186,7 @@ section {
 }
 
 .booking-card-header {
-  background: linear-gradient(135deg, #c9b037, #f4e976);
+  background: linear-gradient(135deg, #0f4c81, #2b6cb0);
   padding: 25px;
   text-align: center;
 }
@@ -3225,7 +3225,7 @@ section {
 }
 
 .villa-info-quick .info-item i {
-  color: #c9b037;
+  color: #0f4c81;
   width: 20px;
   text-align: center;
 }
@@ -3296,7 +3296,7 @@ section {
 }
 
 .contact-method:hover {
-  background: #c9b037;
+  background: #0f4c81;
   color: white;
   transform: translateX(5px);
 }
@@ -3707,7 +3707,7 @@ section {
   .footer-section ul li a:hover,
   .footer-section ul li button:hover {
     padding-left: 0;
-    color: #b8860b;
+    color: #0f4c81;
     text-align: center;
     transform: none;
   }
@@ -3915,7 +3915,7 @@ section {
 }
 
 .gallery-admin-details .detail-item i {
-  color: #B8860B;
+  color: #0f4c81;
 }
 
 .gallery-admin-actions {
@@ -4093,7 +4093,7 @@ section {
 }
 
 .booking-form-header h3 {
-    color: #b8860b;
+    color: #0f4c81;
     font-size: 1.5rem;
     font-weight: 600;
     margin: 0;
@@ -4172,8 +4172,8 @@ section {
 
 .booking-form .form-control:focus {
     outline: none;
-    border-color: #b8860b;
-    box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1);
+    border-color: #0f4c81;
+    box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.1);
 }
 
 .booking-form .form-control.error {

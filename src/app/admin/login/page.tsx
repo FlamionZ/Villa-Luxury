@@ -23,7 +23,7 @@ export default function AdminLogin() {
       if (!success) {
         setError('Invalid username or password');
       }
-    } catch (error) {
+    } catch {
       setError('Network error. Please try again.');
     } finally {
       setLoading(false);
@@ -44,7 +44,7 @@ export default function AdminLogin() {
           <div className="logo">
             <i className="fas fa-shield-alt"></i>
           </div>
-          <h1>Villa Dieng Luxury</h1>
+          <h1>Yumna Villa Dieng</h1>
           <h2>Admin Dashboard</h2>
           <p>Sign in to access the admin panel</p>
         </div>

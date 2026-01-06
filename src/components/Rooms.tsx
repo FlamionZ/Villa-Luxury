@@ -26,6 +26,66 @@ interface Villa {
   status: string;
 }
 
+const staticRooms: Villa[] = [
+  {
+    id: 1,
+    title: "Deluxe Villa",
+    slug: "deluxe-villa",
+    price: 4500000,
+    description: "Villa mewah dengan pemandangan taman tropis dan kolam renang pribadi.",
+    image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    amenities: [
+      { icon: "fas fa-bed", text: "2 Kamar Tidur" },
+      { icon: "fas fa-bath", text: "2 Kamar Mandi" },
+      { icon: "fas fa-swimming-pool", text: "Private Pool" }
+    ],
+    features: ["Private Pool", "Garden View", "24/7 Service"],
+    maxGuests: 4,
+    bedrooms: 2,
+    bathrooms: 2,
+    location: "Dieng Plateau",
+    status: "active"
+  },
+  {
+    id: 2,
+    title: "Ocean View Villa",
+    slug: "ocean-view-villa",
+    price: 6900000,
+    description: "Villa premium dengan pemandangan laut yang menakjubkan dan akses pantai pribadi.",
+    image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    amenities: [
+      { icon: "fas fa-bed", text: "3 Kamar Tidur" },
+      { icon: "fas fa-bath", text: "3 Kamar Mandi" },
+      { icon: "fas fa-water", text: "Beach Access" }
+    ],
+    features: ["Ocean View", "Beach Access", "Butler Service"],
+    maxGuests: 6,
+    bedrooms: 3,
+    bathrooms: 3,
+    location: "Batur Highland",
+    status: "active"
+  },
+  {
+    id: 3,
+    title: "Presidential Suite",
+    slug: "presidential-suite",
+    price: 12000000,
+    description: "Suite mewah terluas dengan semua fasilitas premium dan butler pribadi.",
+    image: "https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    amenities: [
+      { icon: "fas fa-bed", text: "4 Kamar Tidur" },
+      { icon: "fas fa-bath", text: "4 Kamar Mandi" },
+      { icon: "fas fa-user-tie", text: "Private Butler" }
+    ],
+    features: ["Butler Service", "Helicopter Pad", "Private Chef"],
+    maxGuests: 8,
+    bedrooms: 4,
+    bathrooms: 4,
+    location: "Sumberejo Valley",
+    status: "active"
+  }
+];
+
 export default function Rooms() {
   const [villas, setVillas] = useState<Villa[]>([]);
   const [loading, setLoading] = useState(true);
@@ -66,66 +126,6 @@ export default function Rooms() {
     setSelectedRoom(selectedRoom === roomId ? null : roomId);
   };
 
-  // Static fallback data (keep the existing rooms as backup)
-  const staticRooms: Villa[] = [
-    {
-      id: 1,
-      title: "Deluxe Villa",
-      slug: "deluxe-villa",
-      price: 4500000,
-      description: "Villa mewah dengan pemandangan taman tropis dan kolam renang pribadi.",
-      image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      amenities: [
-        { icon: "fas fa-bed", text: "2 Kamar Tidur" },
-        { icon: "fas fa-bath", text: "2 Kamar Mandi" },
-        { icon: "fas fa-swimming-pool", text: "Private Pool" }
-      ],
-      features: ["Private Pool", "Garden View", "24/7 Service"],
-      maxGuests: 4,
-      bedrooms: 2,
-      bathrooms: 2,
-      location: "Dieng Plateau",
-      status: "active"
-    },
-    {
-      id: 2,
-      title: "Ocean View Villa",
-      slug: "ocean-view-villa",
-      price: 6900000,
-      description: "Villa premium dengan pemandangan laut yang menakjubkan dan akses pantai pribadi.",
-      image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      amenities: [
-        { icon: "fas fa-bed", text: "3 Kamar Tidur" },
-        { icon: "fas fa-bath", text: "3 Kamar Mandi" },
-        { icon: "fas fa-water", text: "Beach Access" }
-      ],
-      features: ["Ocean View", "Beach Access", "Butler Service"],
-      maxGuests: 6,
-      bedrooms: 3,
-      bathrooms: 3,
-      location: "Batur Highland",
-      status: "active"
-    },
-    {
-      id: 3,
-      title: "Presidential Suite",
-      slug: "presidential-suite",
-      price: 12000000,
-      description: "Suite mewah terluas dengan semua fasilitas premium dan butler pribadi.",
-      image: "https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      amenities: [
-        { icon: "fas fa-bed", text: "4 Kamar Tidur" },
-        { icon: "fas fa-bath", text: "4 Kamar Mandi" },
-        { icon: "fas fa-user-tie", text: "Private Butler" }
-      ],
-      features: ["Butler Service", "Helicopter Pad", "Private Chef"],
-      maxGuests: 8,
-      bedrooms: 4,
-      bathrooms: 4,
-      location: "Sumberejo Valley",
-      status: "active"
-    }
-  ];
   return (
     <section id="rooms" className="rooms">
       <div className="container">

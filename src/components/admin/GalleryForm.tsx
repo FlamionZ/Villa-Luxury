@@ -37,6 +37,25 @@ export default function GalleryForm({ galleryId, isEdit = false }: GalleryFormPr
 
   useEffect(() => {
     if (isEdit && galleryId) {
+      const fetchGalleryData = async () => {
+        try {
+          const response = await fetch(`/api/admin/gallery/${galleryId}`);
+          const data = await response.json();
+          
+          if (data.success) {
+            setFormData({
+              title: data.data.title,
+              description: data.data.description || '',
+              image_url: data.data.image_url,
+              alt_text: data.data.alt_text || '',
+              display_order: data.data.display_order,
+              is_active: data.data.is_active
+            });
+          }
+        } catch (error) {
+          console.error('Error fetching gallery data:', error);
+        }
+      };
       fetchGalleryData();
     }
   }, [isEdit, galleryId]);
@@ -46,26 +65,6 @@ export default function GalleryForm({ galleryId, isEdit = false }: GalleryFormPr
       setImagePreview(formData.image_url);
     }
   }, [formData.image_url]);
-
-  const fetchGalleryData = async () => {
-    try {
-      const response = await fetch(`/api/admin/gallery/${galleryId}`);
-      const data = await response.json();
-      
-      if (data.success) {
-        setFormData({
-          title: data.data.title,
-          description: data.data.description || '',
-          image_url: data.data.image_url,
-          alt_text: data.data.alt_text || '',
-          display_order: data.data.display_order,
-          is_active: data.data.is_active
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching gallery data:', error);
-    }
-  };
 
   const handleFileUpload = async (file: File) => {
     setUploading(true);
@@ -151,7 +150,7 @@ export default function GalleryForm({ galleryId, isEdit = false }: GalleryFormPr
       {/* Sidebar */}
       <div className="admin-sidebar">
         <div className="sidebar-header">
-          <h2><i className="fas fa-hotel"></i> Villa Dieng Luxury</h2>
+          <h2><i className="fas fa-hotel"></i> Yumna Villa Dieng</h2>
           <p>Admin Dashboard</p>
         </div>
         
@@ -320,7 +319,6 @@ export default function GalleryForm({ galleryId, isEdit = false }: GalleryFormPr
                             
                             const files = e.dataTransfer.files;
                             if (files.length > 0) {
-                              const file = files[0];
                               if (fileInputRef.current) {
                                 fileInputRef.current.files = files;
                                 handleFileChange({ target: { files } } as React.ChangeEvent<HTMLInputElement>);

@@ -5,7 +5,7 @@ import Image from 'next/image';
 const testimonials = [
   {
     id: 1,
-    content: "Pengalaman menginap yang luar biasa! Villa Dieng Luxury benar-benar memberikan kenyamanan dan kemewahan yang tak terlupakan. Stafnya sangat ramah dan profesional.",
+    content: "Pengalaman menginap yang luar biasa! Yumna Villa Dieng benar-benar memberikan kenyamanan dan kemewahan yang tak terlupakan. Stafnya sangat ramah dan profesional.",
     author: {
       name: "John Doe",
       title: "CEO, Tech Company",
@@ -23,7 +23,7 @@ const testimonials = [
   },
   {
     id: 3,
-    content: "Bulan madu kami di Villa Dieng Luxury sangat sempurna. Suasana romantis, makanan lezat, dan pelayanan yang sangat memuaskan.",
+    content: "Bulan madu kami di Yumna Villa Dieng sangat sempurna. Suasana romantis, makanan lezat, dan pelayanan yang sangat memuaskan.",
     author: {
       name: "Michael Brown",
       title: "Newlywed",

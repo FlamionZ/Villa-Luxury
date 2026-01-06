@@ -10,10 +10,6 @@ interface Villa extends RowDataPacket {
   is_active: boolean;
 }
 
-interface ExistingBooking extends RowDataPacket {
-  id: number;
-}
-
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

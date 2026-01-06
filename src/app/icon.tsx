@@ -17,19 +17,19 @@ export default function Icon() {
       <div
         style={{
           fontSize: 24,
-          background: '#2d5016',
+          background: '#0f4c81',
           width: '100%',
           height: '100%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: '#d4a574',
+          color: '#a5d8ff',
           borderRadius: '6px',
           fontWeight: 'bold',
           fontFamily: 'serif',
         }}
       >
-        V
+        Y
       </div>
     ),
     {

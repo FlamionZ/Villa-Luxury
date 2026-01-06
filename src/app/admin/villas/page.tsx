@@ -5,7 +5,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { formatRupiahNumber } from '@/lib/utils';
-import { getPriceRange } from '@/lib/pricing';
 
 interface Villa {
   id: number;
@@ -98,7 +97,7 @@ export default function VillasPage() {
       {/* Sidebar */}
       <div className="admin-sidebar">
         <div className="sidebar-header">
-          <h2><i className="fas fa-hotel"></i> Villa Dieng Luxury</h2>
+          <h2><i className="fas fa-hotel"></i> Yumna Villa Dieng</h2>
           <p>Admin Dashboard</p>
         </div>
         

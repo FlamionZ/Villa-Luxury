@@ -138,7 +138,7 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
     const {
-      slug, title, description, long_description, weekday_price, weekend_price, high_season_price, price, location, max_guests, status,
+      slug, title, description, long_description, weekday_price, weekend_price, high_season_price, location, max_guests, status,
       amenities, features, images
     } = body;
 

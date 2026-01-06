@@ -9,7 +9,7 @@ export default function Contact() {
           <div className="contact-info">
             <div className="section-header">
               <span className="section-subtitle">Kontak Kami</span>
-              <h2 className="section-title">Hubungi Villa Dieng Luxury</h2>
+              <h2 className="section-title">Hubungi Yumna Villa Dieng</h2>
             </div>
             <p>Siap untuk merasakan pengalaman villa mewah yang tak terlupakan? Hubungi kami sekarang untuk reservasi atau informasi lebih lanjut.</p>
             <div className="contact-items">

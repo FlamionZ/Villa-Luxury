@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { formatRupiahNumber } from '@/lib/utils';
@@ -28,11 +28,7 @@ export default function BookingsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [statusFilter, setStatusFilter] = useState('');
 
-  useEffect(() => {
-    fetchBookings();
-  }, [currentPage, statusFilter]);
-
-  const fetchBookings = async () => {
+  const fetchBookings = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
@@ -56,7 +52,11 @@ export default function BookingsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, statusFilter]);
+
+  useEffect(() => {
+    fetchBookings();
+  }, [fetchBookings]);
 
   const updateBookingStatus = async (bookingId: number, newStatus: string) => {
     try {
@@ -109,7 +109,7 @@ export default function BookingsPage() {
       {/* Sidebar */}
       <div className="admin-sidebar">
         <div className="sidebar-header">
-          <h2><i className="fas fa-hotel"></i> Villa Dieng Luxury</h2>
+          <h2><i className="fas fa-hotel"></i> Yumna Villa Dieng</h2>
           <p>Admin Dashboard</p>
         </div>
         

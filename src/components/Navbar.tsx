@@ -37,14 +37,14 @@ export default function Navbar() {
         <div className="nav-container">
           <div className="nav-logo">
             <Image 
-              src="/images/Logomark_coklat-01.png" 
-              alt="Villa Dieng Luxury Logo" 
+              src="/images/logo.png" 
+              alt="Yumna Villa Dieng Logo" 
               width={50} 
               height={50}
               style={{ height: 'auto' }}
               priority
             />
-            <h2>Villa Dieng Luxury</h2>
+            <h2>Yumna Villa Dieng</h2>
           </div>
           <ul className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
             <li className="nav-item">

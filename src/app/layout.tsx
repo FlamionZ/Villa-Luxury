@@ -10,29 +10,29 @@ const montserrat = Montserrat({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.villadiengluxury.com'),
-  title: "Villa Dieng Luxury - Penginapan Mewah di Dieng | Villa Paradise",
-  description: "Villa eksklusif dengan pemandangan Dieng yang menakjubkan. Fasilitas lengkap, pemandangan pegunungan, dan layanan terbaik untuk pengalaman menginap yang tak terlupakan.",
-  keywords: "villa dieng, penginapan dieng, villa luxury, villa dengan view pegunungan, akomodasi dieng, villa terbaik dieng",
-  authors: [{ name: "Villa Paradise Dieng" }],
+  title: "Yumna Villa Dieng - Penginapan Mewah di Dieng",
+  description: "Yumna Villa Dieng dengan pemandangan Dieng yang menakjubkan. Fasilitas lengkap, pemandangan pegunungan, dan layanan terbaik untuk pengalaman menginap yang tak terlupakan.",
+  keywords: "yumna villa dieng, penginapan dieng, villa luxury, villa dengan view pegunungan, akomodasi dieng, villa terbaik dieng",
+  authors: [{ name: "Yumna Villa Dieng" }],
   openGraph: {
-    title: "Villa Dieng Luxury - Villa Eksklusif dengan Pemandangan Menakjubkan",
+    title: "Yumna Villa Dieng - Villa Eksklusif dengan Pemandangan Menakjubkan",
     description: "Villa mewah di Dieng dengan fasilitas lengkap dan pemandangan pegunungan yang memukau. Booking sekarang untuk pengalaman tak terlupakan!",
     type: "website",
     locale: "id_ID",
     url: "https://www.villadiengluxury.com",
-    siteName: "Villa Dieng Luxury",
+    siteName: "Yumna Villa Dieng",
     images: [
       {
         url: "https://www.villadiengluxury.com/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Villa Dieng Luxury - Villa Eksklusif dengan Pemandangan Menakjubkan",
+        alt: "Yumna Villa Dieng - Villa Eksklusif dengan Pemandangan Menakjubkan",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Villa Dieng Luxury - Villa Eksklusif di Dieng",
+    title: "Yumna Villa Dieng - Villa Eksklusif di Dieng",
     description: "Villa mewah dengan pemandangan pegunungan Dieng yang menakjubkan. Fasilitas lengkap & layanan terbaik.",
     images: ["https://www.villadiengluxury.com/og-image.jpg"],
   },
@@ -60,28 +60,25 @@ export default function RootLayout({
   return (
     <html lang="id">
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/icon.png" sizes="any" />
-        <link rel="icon" href="/icon-16x16.png" sizes="16x16" type="image/png" />
-        <link rel="icon" href="/icon-32x32.png" sizes="32x32" type="image/png" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="icon" href="/images/logo.png" sizes="any" />
+        <link rel="apple-touch-icon" href="/images/logo.png" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
         
         {/* Open Graph Meta Tags untuk WhatsApp */}
-        <meta property="og:title" content="Villa Dieng Luxury - Villa Eksklusif dengan Pemandangan Menakjubkan" />
+        <meta property="og:title" content="Yumna Villa Dieng - Villa Eksklusif dengan Pemandangan Menakjubkan" />
         <meta property="og:description" content="Villa mewah di Dieng dengan fasilitas lengkap dan pemandangan pegunungan yang memukau. Booking sekarang untuk pengalaman tak terlupakan!" />
         <meta property="og:image" content="https://www.villadiengluxury.com/og-image.jpg" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content="Villa Dieng Luxury - Villa Eksklusif dengan Pemandangan Menakjubkan" />
+        <meta property="og:image:alt" content="Yumna Villa Dieng - Villa Eksklusif dengan Pemandangan Menakjubkan" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.villadiengluxury.com" />
-        <meta property="og:site_name" content="Villa Dieng Luxury" />
+        <meta property="og:site_name" content="Yumna Villa Dieng" />
         <meta property="og:locale" content="id_ID" />
         
         {/* Twitter Card Meta Tags */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Villa Dieng Luxury - Villa Eksklusif di Dieng" />
+        <meta name="twitter:title" content="Yumna Villa Dieng - Villa Eksklusif di Dieng" />
         <meta name="twitter:description" content="Villa mewah dengan pemandangan pegunungan Dieng yang menakjubkan. Fasilitas lengkap & layanan terbaik." />
         <meta name="twitter:image" content="https://www.villadiengluxury.com/og-image.jpg" />
         

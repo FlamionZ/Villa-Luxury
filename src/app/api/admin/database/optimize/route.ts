@@ -1,6 +1,7 @@
 // API untuk apply database indexes
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getDbConnection } from '@/lib/database';
+import { RowDataPacket } from 'mysql2';
 
 // Critical indexes untuk performa optimal
 const CRITICAL_INDEXES = [
@@ -41,7 +42,7 @@ const CRITICAL_INDEXES = [
   }
 ];
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     console.log('🚀 Starting database index optimization...');
     
@@ -137,11 +138,11 @@ export async function GET() {
       "SHOW INDEX FROM bookings"
     ];
     
-    const indexes: Record<string, any> = {};
+    const indexes: Record<string, RowDataPacket[]> = {};
     
     for (const query of queries) {
       try {
-        const [rows] = await connection.execute(query);
+        const [rows] = await connection.execute<RowDataPacket[]>(query);
         const tableName = query.split(' ')[3];
         indexes[tableName] = rows;
       } catch (error) {

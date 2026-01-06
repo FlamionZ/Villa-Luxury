@@ -90,7 +90,7 @@ CREATE TABLE site_settings (
 INSERT INTO villa_types (slug, title, description, long_description, price, location, size, max_guests) VALUES
 ('deluxe-villa', 'Deluxe Villa', 'Villa mewah dengan pemandangan taman tropis dan kolam renang pribadi yang sempurna untuk liburan romantis atau keluarga kecil.', 'Nikmati kemewahan dan kenyamanan di Deluxe Villa kami yang dirancang dengan sempurna. Villa ini menawarkan pemandangan taman tropis yang memukau dan kolam renang pribadi untuk pengalaman menginap yang tak terlupakan. Dengan desain modern dan fasilitas lengkap, villa ini cocok untuk pasangan yang ingin menikmati bulan madu atau keluarga kecil yang mencari liburan berkualitas.', 299.00, 'Zona Taman Tropis', '120m²', 4),
 ('ocean-view-villa', 'Ocean View Villa', 'Villa premium dengan pemandangan laut yang menakjubkan dan akses pantai pribadi.', 'Rasakan kemewahan sejati di Ocean View Villa dengan pemandangan laut yang spektakuler. Villa ini menawarkan akses langsung ke pantai pribadi dan fasilitas premium yang akan membuat pengalaman menginap Anda istimewa. Desain villa yang elegan dengan sentuhan modern memberikan kenyamanan maksimal sambil menikmati keindahan alam laut tropis.', 459.00, 'Zona Tepi Pantai', '180m²', 6),
-('presidential-suite', 'Presidential Suite', 'Suite mewah terluas dengan semua fasilitas premium dan butler pribadi.', 'Presidential Suite adalah puncak kemewahan di Villa Dieng Luxury. Dengan luas terbesar dan fasilitas paling lengkap, suite ini menawarkan pengalaman menginap yang tak tertandingi. Dilengkapi dengan butler pribadi dan semua fasilitas premium, Presidential Suite cocok untuk tamu VIP atau acara spesial yang membutuhkan kemewahan ekstra.', 799.00, 'Zona Premium Hilltop', '350m²', 8);
+('presidential-suite', 'Presidential Suite', 'Suite mewah terluas dengan semua fasilitas premium dan butler pribadi.', 'Presidential Suite adalah puncak kemewahan di Yumna Villa Dieng. Dengan luas terbesar dan fasilitas paling lengkap, suite ini menawarkan pengalaman menginap yang tak tertandingi. Dilengkapi dengan butler pribadi dan semua fasilitas premium, Presidential Suite cocok untuk tamu VIP atau acara spesial yang membutuhkan kemewahan ekstra.', 799.00, 'Zona Premium Hilltop', '350m²', 8);
 
 -- Insert amenities
 INSERT INTO villa_amenities (villa_id, icon, text) VALUES
@@ -146,7 +146,7 @@ INSERT INTO admin_users (username, email, password_hash, role) VALUES
 
 -- Insert site settings
 INSERT INTO site_settings (setting_key, setting_value, setting_type, description) VALUES
-('site_name', 'Villa Dieng Luxury', 'text', 'Website name'),
+('site_name', 'Yumna Villa Dieng', 'text', 'Website name'),
 ('site_description', 'Pengalaman Villa Mewah yang Tak Terlupakan', 'text', 'Website description'),
 ('contact_phone', '+62 822-3489-8455', 'text', 'Contact phone number'),
 ('contact_email', 'villadiengluxury@gmail.com', 'text', 'Contact email'),

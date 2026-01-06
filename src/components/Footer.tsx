@@ -51,13 +51,13 @@ export default function Footer() {
           <div className="footer-section">
             <div className="footer-logo">
               <Image 
-                src="/images/Logomark_coklat-01.png" 
-                alt="Villa Dieng Luxury Logo" 
+                src="/images/logo.png" 
+                alt="Yumna Villa Dieng Logo" 
                 width={60} 
                 height={60}
                 style={{ height: 'auto' }}
               />
-              <h3>Villa Dieng Luxury</h3>
+              <h3>Yumna Villa Dieng</h3>
             </div>
             <p>Pengalaman villa mewah yang tak terlupakan di Dieng. Nikmati kemewahan dan kenyamanan di destinasi impian Anda.</p>
             <div className="social-links">
@@ -102,7 +102,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="footer-bottom">
-          <p>&copy; 2025 Villa Dieng Luxury. All rights reserved.</p>
+          <p>&copy; 2025 Yumna Villa Dieng. All rights reserved.</p>
           <div className="footer-links">
             <a href="#">Privacy Policy</a>
             <a href="#">Terms of Service</a>

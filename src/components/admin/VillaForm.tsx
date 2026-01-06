@@ -54,36 +54,35 @@ export default function VillaForm({ villaId, isEdit = false }: VillaFormProps) {
 
   useEffect(() => {
     if (isEdit && villaId) {
+      const fetchVillaData = async () => {
+        try {
+          const response = await fetch(`/api/admin/villas/${villaId}`);
+          const data = await response.json();
+          
+          if (data.success) {
+            setFormData({
+              slug: data.data.slug,
+              title: data.data.title,
+              description: data.data.description,
+              long_description: data.data.long_description,
+              weekday_price: data.data.weekday_price || data.data.price || 0,
+              weekend_price: data.data.weekend_price || data.data.price || 0,
+              high_season_price: data.data.high_season_price || data.data.price || 0,
+              location: data.data.location,
+              max_guests: data.data.max_guests,
+              status: data.data.status,
+              amenities: data.data.amenities || [],
+              features: data.data.features || [],
+              images: data.data.images || []
+            });
+          }
+        } catch (error) {
+          console.error('Error fetching villa data:', error);
+        }
+      };
       fetchVillaData();
     }
   }, [isEdit, villaId]);
-
-  const fetchVillaData = async () => {
-    try {
-      const response = await fetch(`/api/admin/villas/${villaId}`);
-      const data = await response.json();
-      
-      if (data.success) {
-        setFormData({
-          slug: data.data.slug,
-          title: data.data.title,
-          description: data.data.description,
-          long_description: data.data.long_description,
-          weekday_price: data.data.weekday_price || data.data.price || 0,
-          weekend_price: data.data.weekend_price || data.data.price || 0,
-          high_season_price: data.data.high_season_price || data.data.price || 0,
-          location: data.data.location,
-          max_guests: data.data.max_guests,
-          status: data.data.status,
-          amenities: data.data.amenities || [],
-          features: data.data.features || [],
-          images: data.data.images || []
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching villa data:', error);
-    }
-  };
 
   const generateSlug = (title: string) => {
     return title
@@ -273,7 +272,7 @@ export default function VillaForm({ villaId, isEdit = false }: VillaFormProps) {
       {/* Sidebar */}
       <div className="admin-sidebar">
         <div className="sidebar-header">
-          <h2><i className="fas fa-hotel"></i> Villa Dieng Luxury</h2>
+          <h2><i className="fas fa-hotel"></i> Yumna Villa Dieng</h2>
           <p>Admin Dashboard</p>
         </div>
         

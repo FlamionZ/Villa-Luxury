@@ -36,7 +36,7 @@ export default function AdminSidebar() {
   return (
     <div className="admin-sidebar">
       <div className="sidebar-header">
-        <h2><i className="fas fa-hotel"></i> Villa Dieng Luxury</h2>
+        <h2><i className="fas fa-hotel"></i> Yumna Villa Dieng</h2>
         <p>Admin Dashboard</p>
       </div>
       

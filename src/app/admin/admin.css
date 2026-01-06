@@ -295,7 +295,7 @@
 .nav-item.active {
   background: rgba(255, 255, 255, 0.1);
   color: white;
-  border-left-color: #ffd700;
+  border-left-color: #1d8cf8;
 }
 
 .nav-item i {

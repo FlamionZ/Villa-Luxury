@@ -187,7 +187,7 @@ export default function NewBookingPage() {
       } else {
         setErrors({ submit: data.error || 'Failed to create booking' });
       }
-    } catch (error) {
+    } catch {
       setErrors({ submit: 'An error occurred. Please try again.' });
     } finally {
       setSubmitting(false);
@@ -230,7 +230,7 @@ export default function NewBookingPage() {
         {/* Sidebar */}
         <div className="admin-sidebar">
           <div className="sidebar-header">
-            <h2><i className="fas fa-hotel"></i> Villa Dieng Luxury</h2>
+            <h2><i className="fas fa-hotel"></i> Yumna Villa Dieng</h2>
             <p>Admin Dashboard</p>
           </div>
           
