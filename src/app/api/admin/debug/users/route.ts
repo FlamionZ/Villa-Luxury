@@ -1,38 +1,22 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import { getDbConnection } from '@/lib/database';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
 export async function GET() {
   try {
     console.log('=== ADMIN USER DEBUG START ===');
     
-    const connection = await getDbConnection();
-    
-    // Check if admin_users table exists
-    console.log('Checking admin_users table...');
-    const [tables] = await connection.execute('SHOW TABLES LIKE "admin_users"');
-    console.log('Admin_users table exists:', Array.isArray(tables) && tables.length > 0);
-    
-    if (!Array.isArray(tables) || tables.length === 0) {
-      console.log('Creating admin_users table...');
-      await connection.execute(`
-        CREATE TABLE IF NOT EXISTS admin_users (
-          id INT AUTO_INCREMENT PRIMARY KEY,
-          username VARCHAR(255) UNIQUE NOT NULL,
-          email VARCHAR(255) UNIQUE NOT NULL,
-          password_hash VARCHAR(255) NOT NULL,
-          role VARCHAR(50) DEFAULT 'admin',
-          is_active BOOLEAN DEFAULT TRUE,
-          last_login TIMESTAMP NULL,
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-        )
-      `);
-      console.log('Admin_users table created');
-    }
+    const supabase = getSupabaseAdmin();
     
     // Check existing admin users
-    const [users] = await connection.execute('SELECT id, username, email, role, is_active FROM admin_users');
+    const { data: users, error: usersError } = await supabase
+      .from('admin_users')
+      .select('id, username, email, role, is_active');
+
+    if (usersError) {
+      throw new Error(usersError.message);
+    }
+
     console.log('Existing admin users:', users);
     
     // Create default admin if none exists
@@ -40,25 +24,35 @@ export async function GET() {
       console.log('Creating default admin user...');
       const defaultPassword = process.env.ADMIN_DEFAULT_PASSWORD || 'Mandadanyumna';
       const passwordHash = await bcrypt.hash(defaultPassword, 12);
-      
-      await connection.execute(
-        'INSERT INTO admin_users (username, email, password_hash, role) VALUES (?, ?, ?, ?)',
-        ['Villadiengluxury', 'villadiengluxury@gmail.com', passwordHash, 'admin']
-      );
+
+      const { error: insertError } = await supabase
+        .from('admin_users')
+        .insert({
+          username: 'Villadiengluxury',
+          email: 'villadiengluxury@gmail.com',
+          password_hash: passwordHash,
+          role: 'admin',
+          is_active: true
+        });
+
+      if (insertError) {
+        throw new Error(insertError.message);
+      }
       console.log('Default admin user created');
       console.log('Username: Villadiengluxury');
       console.log('Password:', defaultPassword);
     }
     
     // Final check
-    const [finalUsers] = await connection.execute('SELECT id, username, email, role, is_active FROM admin_users');
-    console.log('Final admin users:', finalUsers);
-    
-    // Release connection
-    if (connection && 'release' in connection) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (connection as any).release();
+    const { data: finalUsers, error: finalError } = await supabase
+      .from('admin_users')
+      .select('id, username, email, role, is_active');
+
+    if (finalError) {
+      throw new Error(finalError.message);
     }
+
+    console.log('Final admin users:', finalUsers);
     
     console.log('=== ADMIN USER DEBUG END ===');
     
@@ -66,7 +60,7 @@ export async function GET() {
       success: true,
       message: 'Admin user debug completed',
       data: {
-        tableExists: Array.isArray(tables) && tables.length > 0,
+        tableExists: true,
         userCount: Array.isArray(finalUsers) ? finalUsers.length : 0,
         users: finalUsers
       }

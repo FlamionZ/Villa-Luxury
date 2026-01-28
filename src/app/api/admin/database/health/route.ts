@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getDbConnection } from '@/lib/database';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
 /**
  * Simple database health endpoint for admin checks.
@@ -7,14 +7,14 @@ import { getDbConnection } from '@/lib/database';
  */
 export async function GET() {
 	try {
-		const conn = await getDbConnection();
-		// Ping to verify connectivity
-		await conn.ping();
+		const supabase = getSupabaseAdmin();
+		const { error } = await supabase
+			.from('site_settings')
+			.select('id')
+			.limit(1);
 
-		// Release connection if available
-		if ('release' in conn) {
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			(conn as any).release();
+		if (error) {
+			throw new Error(error.message);
 		}
 
 		return NextResponse.json({ success: true, status: 'ok' });

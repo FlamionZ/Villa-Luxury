@@ -1,13 +1,12 @@
-import mysql from 'mysql2/promise';
+import { createClient } from '@supabase/supabase-js';
 
-const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'villa_paradise',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
+const supabaseUrl = process.env.SUPABASE_URL || '';
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || '';
+
+export const supabase = createClient(supabaseUrl, supabaseKey, {
+  auth: {
+    persistSession: false
+  }
 });
 
-export default pool;
+export default supabase;

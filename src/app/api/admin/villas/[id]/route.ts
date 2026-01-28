@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyAdminToken } from '@/lib/auth';
-import { getDbConnection } from '@/lib/database';
-import { RowDataPacket } from 'mysql2';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
 interface VillaFormData {
   slug: string;
@@ -20,7 +19,7 @@ interface VillaFormData {
   images?: Array<{ image_url: string; alt_text: string; is_primary: boolean; sort_order: number }>;
 }
 
-interface VillaRow extends RowDataPacket {
+interface VillaRow {
   id: number;
   slug: string;
   title: string;
@@ -33,14 +32,30 @@ interface VillaRow extends RowDataPacket {
   location: string;
   max_guests: number;
   status: string;
-  created_at: Date;
-  amenities?: string;
-  features?: string;
-  images?: string;
+  created_at: string;
 }
 
-interface BookingCheck extends RowDataPacket {
+interface BookingCheck {
   count: number;
+}
+
+interface AmenityRow {
+  villa_id: number;
+  icon: string;
+  text: string;
+}
+
+interface FeatureRow {
+  villa_id: number;
+  feature_text: string;
+}
+
+interface ImageRow {
+  villa_id: number;
+  image_url: string;
+  alt_text: string;
+  is_primary: boolean;
+  sort_order: number;
 }
 
 // GET - Fetch single villa
@@ -58,38 +73,63 @@ export async function GET(
     }
 
     const { id: villaId } = await params;
-    const connection = await getDbConnection();
-    
-    const [rows] = await connection.execute<VillaRow[]>(
-      `SELECT v.*, 
-             GROUP_CONCAT(DISTINCT CONCAT(va.icon, '|||', va.text) SEPARATOR '^^^') as amenities,
-             GROUP_CONCAT(DISTINCT vf.feature_text SEPARATOR '^^^') as features,
-             GROUP_CONCAT(DISTINCT CONCAT(vi.image_url, '|||', vi.alt_text, '|||', vi.is_primary, '|||', vi.sort_order) SEPARATOR '^^^') as images
-      FROM villa_types v
-      LEFT JOIN villa_amenities va ON v.id = va.villa_id
-      LEFT JOIN villa_features vf ON v.id = vf.villa_id
-      LEFT JOIN villa_images vi ON v.id = vi.villa_id
-      WHERE v.id = ?
-      GROUP BY v.id`,
-      [villaId]
-    );
+    const supabase = getSupabaseAdmin();
 
-    if (rows.length === 0) {
+    const { data: villa, error: villaError } = await supabase
+      .from('villa_types')
+      .select('id, slug, title, description, long_description, weekday_price, weekend_price, high_season_price, price, location, max_guests, status, created_at')
+      .eq('id', villaId)
+      .maybeSingle<VillaRow>();
+
+    if (villaError) {
+      throw new Error(villaError.message);
+    }
+
+    if (!villa) {
       return NextResponse.json({ success: false, error: 'Villa not found' }, { status: 404 });
     }
 
-    const villa = rows[0];
+    const { data: amenities, error: amenityError } = await supabase
+      .from('villa_amenities')
+      .select('villa_id, icon, text')
+      .eq('villa_id', villa.id)
+      .order('id', { ascending: true });
+
+    if (amenityError) {
+      throw new Error(amenityError.message);
+    }
+
+    const { data: features, error: featureError } = await supabase
+      .from('villa_features')
+      .select('villa_id, feature_text')
+      .eq('villa_id', villa.id)
+      .order('id', { ascending: true });
+
+    if (featureError) {
+      throw new Error(featureError.message);
+    }
+
+    const { data: images, error: imageError } = await supabase
+      .from('villa_images')
+      .select('villa_id, image_url, alt_text, is_primary, sort_order')
+      .eq('villa_id', villa.id)
+      .order('sort_order', { ascending: true })
+      .order('is_primary', { ascending: false });
+
+    if (imageError) {
+      throw new Error(imageError.message);
+    }
+
     const formattedVilla = {
       ...villa,
-      amenities: villa.amenities ? villa.amenities.split('^^^').map((item: string) => {
-        const [icon, text] = item.split('|||');
-        return { icon, text };
-      }) : [],
-      features: villa.features ? villa.features.split('^^^') : [],
-      images: villa.images ? villa.images.split('^^^').map((item: string) => {
-        const [image_url, alt_text, is_primary, sort_order] = item.split('|||');
-        return { image_url, alt_text, is_primary: is_primary === '1', sort_order: parseInt(sort_order) };
-      }) : []
+      amenities: (amenities ?? []).map((item: AmenityRow) => ({ icon: item.icon, text: item.text })),
+      features: (features ?? []).map((item: FeatureRow) => item.feature_text),
+      images: (images ?? []).map((item: ImageRow) => ({
+        image_url: item.image_url,
+        alt_text: item.alt_text,
+        is_primary: !!item.is_primary,
+        sort_order: item.sort_order
+      }))
     };
 
     return NextResponse.json({ success: true, data: formattedVilla });
@@ -119,59 +159,100 @@ export async function PUT(
       slug, title, description, long_description, weekday_price, weekend_price, high_season_price, location, max_guests, status,
       amenities, features, images
     } = body;
+    const supabase = getSupabaseAdmin();
 
-    const connection = await getDbConnection();
+    const { error: updateError } = await supabase
+      .from('villa_types')
+      .update({
+        slug,
+        title,
+        description,
+        long_description: long_description || null,
+        weekday_price,
+        weekend_price,
+        high_season_price,
+        location,
+        max_guests,
+        status: status || 'active',
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', villaId);
 
-    try {
-      // Update villa
-      await connection.execute(
-        `UPDATE villa_types 
-         SET slug = ?, title = ?, description = ?, long_description = ?, weekday_price = ?, weekend_price = ?, high_season_price = ?, 
-             location = ?, max_guests = ?, status = ?, updated_at = CURRENT_TIMESTAMP
-         WHERE id = ?`,
-        [slug, title, description, long_description || null, weekday_price, weekend_price, high_season_price, location, max_guests, status || 'active', villaId]
-      );
-
-      // Delete existing amenities, features, images
-      await connection.execute('DELETE FROM villa_amenities WHERE villa_id = ?', [villaId]);
-      await connection.execute('DELETE FROM villa_features WHERE villa_id = ?', [villaId]);
-      await connection.execute('DELETE FROM villa_images WHERE villa_id = ?', [villaId]);
-
-      // Insert new amenities
-      if (amenities && amenities.length > 0) {
-        for (const amenity of amenities) {
-          await connection.execute(
-            'INSERT INTO villa_amenities (villa_id, icon, text) VALUES (?, ?, ?)',
-            [villaId, amenity.icon, amenity.text]
-          );
-        }
-      }
-
-      // Insert new features
-      if (features && features.length > 0) {
-        for (const feature of features) {
-          await connection.execute(
-            'INSERT INTO villa_features (villa_id, feature_text) VALUES (?, ?)',
-            [villaId, feature]
-          );
-        }
-      }
-
-      // Insert new images
-      if (images && images.length > 0) {
-        for (let i = 0; i < images.length; i++) {
-          const image = images[i];
-          await connection.execute(
-            'INSERT INTO villa_images (villa_id, image_url, alt_text, is_primary, sort_order) VALUES (?, ?, ?, ?, ?)',
-            [villaId, image.image_url, image.alt_text, image.is_primary, i]
-          );
-        }
-      }
-
-      return NextResponse.json({ success: true, message: 'Villa updated successfully' });
-    } catch (error) {
-      throw error;
+    if (updateError) {
+      throw new Error(updateError.message);
     }
+
+    const { error: deleteAmenitiesError } = await supabase
+      .from('villa_amenities')
+      .delete()
+      .eq('villa_id', villaId);
+
+    if (deleteAmenitiesError) {
+      throw new Error(deleteAmenitiesError.message);
+    }
+
+    const { error: deleteFeaturesError } = await supabase
+      .from('villa_features')
+      .delete()
+      .eq('villa_id', villaId);
+
+    if (deleteFeaturesError) {
+      throw new Error(deleteFeaturesError.message);
+    }
+
+    const { error: deleteImagesError } = await supabase
+      .from('villa_images')
+      .delete()
+      .eq('villa_id', villaId);
+
+    if (deleteImagesError) {
+      throw new Error(deleteImagesError.message);
+    }
+
+    if (amenities && amenities.length > 0) {
+      const { error: amenityError } = await supabase
+        .from('villa_amenities')
+        .insert(amenities.map(amenity => ({
+          villa_id: Number(villaId),
+          icon: amenity.icon,
+          text: amenity.text
+        })));
+
+      if (amenityError) {
+        throw new Error(amenityError.message);
+      }
+    }
+
+    if (features && features.length > 0) {
+      const { error: featureError } = await supabase
+        .from('villa_features')
+        .insert(features.map(feature => ({
+          villa_id: Number(villaId),
+          feature_text: feature
+        })));
+
+      if (featureError) {
+        throw new Error(featureError.message);
+      }
+    }
+
+    if (images && images.length > 0) {
+      const { error: imageError } = await supabase
+        .from('villa_images')
+        .insert(images.map((image, index) => ({
+          villa_id: Number(villaId),
+          image_url: image.image_url,
+          alt_text: image.alt_text,
+          is_primary: image.is_primary,
+          sort_order: index
+        })));
+
+      if (imageError) {
+        throw new Error(imageError.message);
+      }
+    }
+
+    return NextResponse.json({ success: true, message: 'Villa updated successfully' });
   } catch (error) {
     console.error('Error updating villa:', error);
     return NextResponse.json({ success: false, error: 'Failed to update villa' }, { status: 500 });
@@ -193,15 +274,21 @@ export async function DELETE(
     }
 
     const { id: villaId } = await params;
-    const connection = await getDbConnection();
+    const supabase = getSupabaseAdmin();
 
-    // Check if there are any active bookings for this villa
-    const [bookings] = await connection.execute<BookingCheck[]>(
-      'SELECT COUNT(*) as count FROM bookings WHERE villa_id = ? AND status IN ("confirmed", "pending")',
-      [villaId]
-    );
+    const { data: bookings, error: bookingError } = await supabase
+      .from('bookings')
+      .select('id', { count: 'exact' })
+      .eq('villa_id', villaId)
+      .in('status', ['confirmed', 'pending']);
 
-    if (bookings[0].count > 0) {
+    if (bookingError) {
+      throw new Error(bookingError.message);
+    }
+
+    const activeCount = bookings?.length ?? 0;
+
+    if (activeCount > 0) {
       return NextResponse.json(
         { success: false, error: 'Cannot delete villa with active bookings' },
         { status: 400 }
@@ -209,7 +296,14 @@ export async function DELETE(
     }
 
     // Delete villa and all related data (cascade will handle amenities, features, images)
-    await connection.execute('DELETE FROM villa_types WHERE id = ?', [villaId]);
+    const { error: deleteError } = await supabase
+      .from('villa_types')
+      .delete()
+      .eq('id', villaId);
+
+    if (deleteError) {
+      throw new Error(deleteError.message);
+    }
 
     return NextResponse.json({ success: true, message: 'Villa deleted successfully' });
   } catch (error) {

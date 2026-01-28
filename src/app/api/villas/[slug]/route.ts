@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDbConnection } from '@/lib/database';
-import { RowDataPacket } from 'mysql2';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
-interface VillaDetail extends RowDataPacket {
+interface VillaDetail {
   id: number;
   title: string;
   slug: string;
@@ -20,16 +19,16 @@ interface VillaDetail extends RowDataPacket {
   updated_at: string;
 }
 
-interface VillaAmenity extends RowDataPacket {
+interface VillaAmenity {
   icon: string;
   text: string;
 }
 
-interface VillaFeature extends RowDataPacket {
+interface VillaFeature {
   feature_text: string;
 }
 
-interface VillaImage extends RowDataPacket {
+interface VillaImage {
   image_url: string;
   alt_text: string;
   is_primary: boolean;
@@ -42,52 +41,72 @@ export async function GET(
 ) {
   try {
     const { slug } = await params;
-    const db = await getDbConnection();
+    const supabase = getSupabaseAdmin();
 
     // Get villa basic info
-    const [villaRows] = await db.execute<VillaDetail[]>(
-      'SELECT * FROM villa_types WHERE slug = ? AND status = "active"',
-      [slug]
-    );
+    const { data: villa, error: villaError } = await supabase
+      .from('villa_types')
+      .select('*')
+      .eq('slug', slug)
+      .eq('status', 'active')
+      .maybeSingle<VillaDetail>();
 
-    if (villaRows.length === 0) {
+    if (villaError) {
+      throw new Error(villaError.message);
+    }
+
+    if (!villa) {
       return NextResponse.json({
         success: false,
         message: 'Villa tidak ditemukan'
       }, { status: 404 });
     }
 
-    const villa = villaRows[0];
-
     // Get amenities
-    const [amenityRows] = await db.execute<VillaAmenity[]>(
-      'SELECT icon, text FROM villa_amenities WHERE villa_id = ?',
-      [villa.id]
-    );
+    const { data: amenityRows, error: amenityError } = await supabase
+      .from('villa_amenities')
+      .select('icon, text')
+      .eq('villa_id', villa.id)
+      .order('id', { ascending: true });
+
+    if (amenityError) {
+      throw new Error(amenityError.message);
+    }
 
     // Get features
-    const [featureRows] = await db.execute<VillaFeature[]>(
-      'SELECT feature_text FROM villa_features WHERE villa_id = ?',
-      [villa.id]
-    );
+    const { data: featureRows, error: featureError } = await supabase
+      .from('villa_features')
+      .select('feature_text')
+      .eq('villa_id', villa.id)
+      .order('id', { ascending: true });
+
+    if (featureError) {
+      throw new Error(featureError.message);
+    }
 
     // Get images
-    const [imageRows] = await db.execute<VillaImage[]>(
-      'SELECT image_url, alt_text, is_primary, sort_order FROM villa_images WHERE villa_id = ? ORDER BY sort_order ASC, is_primary DESC',
-      [villa.id]
-    );
+    const { data: imageRows, error: imageError } = await supabase
+      .from('villa_images')
+      .select('image_url, alt_text, is_primary, sort_order')
+      .eq('villa_id', villa.id)
+      .order('sort_order', { ascending: true })
+      .order('is_primary', { ascending: false });
+
+    if (imageError) {
+      throw new Error(imageError.message);
+    }
 
     // Format amenities
-    const amenities = amenityRows.map(amenity => ({
+    const amenities = (amenityRows ?? []).map(amenity => ({
       icon: amenity.icon,
       text: amenity.text
     }));
 
     // Format features
-    const features = featureRows.map(feature => feature.feature_text);
+    const features = (featureRows ?? []).map(feature => feature.feature_text);
 
     // Format images
-    const images = imageRows.length > 0 
+    const images = imageRows && imageRows.length > 0 
       ? imageRows.map(img => img.image_url)
       : ['https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'];
 

@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDbConnection } from '@/lib/database';
-import { RowDataPacket, ResultSetHeader } from 'mysql2';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
-interface Villa extends RowDataPacket {
+interface Villa {
   id: number;
-  name: string;
-  price_per_night: number;
+  title: string;
+  price: number;
   max_guests: number;
-  is_active: boolean;
+  status: string;
 }
 
 export async function POST(request: NextRequest) {
@@ -61,22 +60,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const db = await getDbConnection();
+    const supabase = getSupabaseAdmin();
 
     // Check if villa exists and is active
-    const [villas] = await db.execute<Villa[]>(
-      'SELECT id, name, max_guests, price_per_night, is_active FROM villa_types WHERE id = ? AND is_active = TRUE',
-      [villa_id]
-    );
+    const { data: villa, error: villaError } = await supabase
+      .from('villa_types')
+      .select('id, title, max_guests, price, status')
+      .eq('id', villa_id)
+      .eq('status', 'active')
+      .maybeSingle<Villa>();
 
-    if (!Array.isArray(villas) || villas.length === 0) {
+    if (villaError) {
+      throw new Error(villaError.message);
+    }
+
+    if (!villa) {
       return NextResponse.json(
         { success: false, error: 'Villa not found or not available' },
         { status: 404 }
       );
     }
-
-    const villa = villas[0];
 
     // Check if number of guests exceeds villa capacity
     if (number_of_guests > villa.max_guests) {
@@ -87,19 +90,22 @@ export async function POST(request: NextRequest) {
     }
 
     // Check availability (no overlapping bookings for the same villa)
-    const [existingBookings] = await db.execute(
-      `SELECT id FROM bookings 
-       WHERE villa_id = ? 
-       AND status NOT IN ('cancelled', 'rejected')
-       AND (
-         (check_in_date <= ? AND check_out_date > ?) OR
-         (check_in_date < ? AND check_out_date >= ?) OR
-         (check_in_date >= ? AND check_out_date <= ?)
-       )`,
-      [villa_id, check_in_date, check_in_date, check_out_date, check_out_date, check_in_date, check_out_date]
-    );
+    const { data: existingBookings, error: bookingError } = await supabase
+      .from('bookings')
+      .select('id')
+      .eq('villa_id', villa_id)
+      .not('status', 'in', '(cancelled,rejected)')
+      .or(
+        `and(check_in_date.lte.${check_in_date},check_out_date.gt.${check_in_date}),` +
+          `and(check_in_date.lt.${check_out_date},check_out_date.gte.${check_out_date}),` +
+          `and(check_in_date.gte.${check_in_date},check_out_date.lte.${check_out_date})`
+      );
 
-    if (Array.isArray(existingBookings) && existingBookings.length > 0) {
+    if (bookingError) {
+      throw new Error(bookingError.message);
+    }
+
+    if ((existingBookings ?? []).length > 0) {
       return NextResponse.json(
         { success: false, error: 'Villa is not available for the selected dates' },
         { status: 409 }
@@ -109,29 +115,37 @@ export async function POST(request: NextRequest) {
     // Calculate total days and price
     const timeDiff = checkOut.getTime() - checkIn.getTime();
     const totalDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-    const totalPrice = totalDays * villa.price_per_night;
+    const totalPrice = totalDays * villa.price;
 
     // Create booking
-    const [result] = await db.execute<ResultSetHeader>(
-      `INSERT INTO bookings (
-        villa_id, guest_name, guest_email, guest_phone, 
-        check_in_date, check_out_date, number_of_guests, 
-        total_price, special_requests, status, created_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())`,
-      [
-        villa_id, guest_name, guest_email, guest_phone,
-        check_in_date, check_out_date, number_of_guests,
-        totalPrice, special_requests || null
-      ]
-    );
+    const { data: createdBooking, error: insertError } = await supabase
+      .from('bookings')
+      .insert({
+        villa_id,
+        guest_name,
+        guest_email,
+        guest_phone,
+        check_in_date,
+        check_out_date,
+        num_guests: number_of_guests,
+        total_price: totalPrice,
+        special_requests: special_requests || null,
+        status: 'pending'
+      })
+      .select('id')
+      .single();
 
-    const bookingId = result.insertId;
+    if (insertError) {
+      throw new Error(insertError.message);
+    }
+
+    const bookingId = createdBooking?.id;
 
     return NextResponse.json({
       success: true,
       data: {
         booking_id: bookingId,
-        villa_name: villa.name,
+        villa_name: villa.title,
         total_days: totalDays,
         total_price: totalPrice,
         status: 'pending'

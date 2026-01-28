@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyAdminToken } from '@/lib/auth';
-import { getDbConnection } from '@/lib/database';
-import { RowDataPacket } from 'mysql2';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
-interface Villa extends RowDataPacket {
+interface Villa {
   id: number;
   status: string;
 }
@@ -22,29 +21,38 @@ export async function PATCH(
     }
 
     const { id: villaId } = await params;
-    const connection = await getDbConnection();
+    const supabase = getSupabaseAdmin();
 
     // Get current status
-    const [rows] = await connection.execute<Villa[]>(
-      'SELECT id, status FROM villa_types WHERE id = ?',
-      [villaId]
-    );
+    const { data: villa, error: villaError } = await supabase
+      .from('villa_types')
+      .select('id, status')
+      .eq('id', villaId)
+      .maybeSingle<Villa>();
 
-    if (rows.length === 0) {
+    if (villaError) {
+      throw new Error(villaError.message);
+    }
+
+    if (!villa) {
       return NextResponse.json(
         { success: false, error: 'Villa not found' },
         { status: 404 }
       );
     }
 
-    const currentStatus = rows[0].status;
+    const currentStatus = villa.status;
     const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
 
     // Update status
-    await connection.execute(
-      'UPDATE villa_types SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-      [newStatus, villaId]
-    );
+    const { error: updateError } = await supabase
+      .from('villa_types')
+      .update({ status: newStatus, updated_at: new Date().toISOString() })
+      .eq('id', villaId);
+
+    if (updateError) {
+      throw new Error(updateError.message);
+    }
 
     return NextResponse.json({
       success: true,

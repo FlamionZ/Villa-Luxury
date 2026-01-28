@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDbConnection } from '@/lib/database';
-import { RowDataPacket } from 'mysql2';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
-interface GalleryItem extends RowDataPacket {
+interface GalleryItem {
   id: number;
   title: string;
   description: string;
@@ -14,19 +13,26 @@ interface GalleryItem extends RowDataPacket {
 // GET - Fetch active gallery items for public display
 export async function GET(request: NextRequest) {
   try {
-    const db = await getDbConnection();
+    const supabase = getSupabaseAdmin();
     
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get('limit') || '20');
     
-    const [galleryItems] = await db.execute<GalleryItem[]>(
-      'SELECT id, title, description, image_url, alt_text, display_order FROM gallery WHERE is_active = TRUE ORDER BY display_order ASC, created_at DESC LIMIT ?',
-      [limit]
-    );
+    const { data: galleryItems, error } = await supabase
+      .from('gallery')
+      .select('id, title, description, image_url, alt_text, display_order')
+      .eq('is_active', true)
+      .order('display_order', { ascending: true })
+      .order('created_at', { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      throw new Error(error.message);
+    }
     
     return NextResponse.json({
       success: true,
-      data: galleryItems
+      data: galleryItems ?? []
     });
   } catch (error) {
     console.error('Error fetching gallery items:', error);

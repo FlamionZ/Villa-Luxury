@@ -1,7 +1,5 @@
 // API untuk apply database indexes
 import { NextResponse } from 'next/server';
-import { getDbConnection } from '@/lib/database';
-import { RowDataPacket } from 'mysql2';
 
 // Critical indexes untuk performa optimal
 const CRITICAL_INDEXES = [
@@ -43,125 +41,19 @@ const CRITICAL_INDEXES = [
 ];
 
 export async function POST() {
-  try {
-    console.log('🚀 Starting database index optimization...');
-    
-    const connection = await getDbConnection();
-    const results = [];
-    
-    // Apply each index one by one
-    for (const index of CRITICAL_INDEXES) {
-      try {
-        console.log(`📝 Creating index: ${index.name}`);
-        await connection.execute(index.sql);
-        
-        results.push({
-          index: index.name,
-          status: 'success',
-          description: index.description
-        });
-        
-        console.log(`✅ Index ${index.name} created successfully`);
-      } catch (error) {
-        console.error(`❌ Failed to create index ${index.name}:`, error);
-        
-        results.push({
-          index: index.name,
-          status: 'failed',
-          error: error instanceof Error ? error.message : 'Unknown error',
-          description: index.description
-        });
-      }
-    }
-    
-    // Analyze tables for optimization
-    console.log('📊 Analyzing table statistics...');
-    const analyzeQueries = [
-      'ANALYZE TABLE villa_types',
-      'ANALYZE TABLE villa_amenities', 
-      'ANALYZE TABLE villa_features',
-      'ANALYZE TABLE villa_images',
-      'ANALYZE TABLE bookings'
-    ];
-    
-    for (const query of analyzeQueries) {
-      try {
-        await connection.execute(query);
-        console.log(`✅ ${query} completed`);
-      } catch (error) {
-        console.log(`⚠️ ${query} failed:`, error);
-      }
-    }
-    
-    // connection.release(); // Not needed for mysql2 single connection
-    
-    const successCount = results.filter(r => r.status === 'success').length;
-    const failCount = results.filter(r => r.status === 'failed').length;
-    
-    console.log(`🎉 Index optimization completed: ${successCount} success, ${failCount} failed`);
-    
-    return NextResponse.json({
-      success: true,
-      message: `Database indexes applied successfully`,
-      summary: {
-        total: CRITICAL_INDEXES.length,
-        success: successCount,
-        failed: failCount
-      },
-      results: results,
-      expectedImprovement: '80-90% faster query performance',
-      timestamp: new Date().toISOString()
-    });
-    
-  } catch (error) {
-    console.error('💥 Database optimization failed:', error);
-    
-    return NextResponse.json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-      message: 'Failed to apply database indexes'
-    }, { status: 500 });
-  }
+  return NextResponse.json({
+    success: true,
+    message: 'Supabase manages indexes via SQL editor or migrations. Apply these in Supabase dashboard if needed.',
+    suggestedIndexes: CRITICAL_INDEXES,
+    timestamp: new Date().toISOString()
+  });
 }
 
 // GET untuk check current indexes
 export async function GET() {
-  try {
-    const connection = await getDbConnection();
-    
-    // Check existing indexes
-    const queries = [
-      "SHOW INDEX FROM villa_types",
-      "SHOW INDEX FROM villa_amenities", 
-      "SHOW INDEX FROM villa_features",
-      "SHOW INDEX FROM villa_images",
-      "SHOW INDEX FROM bookings"
-    ];
-    
-    const indexes: Record<string, RowDataPacket[]> = {};
-    
-    for (const query of queries) {
-      try {
-        const [rows] = await connection.execute<RowDataPacket[]>(query);
-        const tableName = query.split(' ')[3];
-        indexes[tableName] = rows;
-      } catch (error) {
-        console.log(`Error checking indexes for ${query}:`, error);
-      }
-    }
-    
-    // connection.release(); // Not needed for mysql2 single connection
-    
-    return NextResponse.json({
-      success: true,
-      indexes: indexes,
-      message: 'Current database indexes retrieved'
-    });
-    
-  } catch (error) {
-    return NextResponse.json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 });
-  }
+  return NextResponse.json({
+    success: true,
+    message: 'Index inspection is not available via Supabase REST. Use the Supabase SQL editor.',
+    suggestedIndexes: CRITICAL_INDEXES
+  });
 }

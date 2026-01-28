@@ -1,47 +1,43 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDbConnection } from '@/lib/database';
-import { RowDataPacket } from 'mysql2';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
-interface VillaRow extends RowDataPacket {
+interface VillaRow {
   id: number;
   slug: string;
   title: string;
   description: string;
   long_description?: string;
   price: number;
-  weekday_price: number;
-  weekend_price: number;
-  high_season_price: number;
+  weekday_price?: number;
+  weekend_price?: number;
+  high_season_price?: number;
   location: string;
   size: string;
   max_guests: number;
   status: string;
-  created_at: Date;
-  amenities?: string;
-  features?: string;
-  images?: string;
+  created_at: string;
 }
 
-interface ImageRow extends RowDataPacket {
+interface ImageRow {
   villa_id: number;
   image_url: string;
   alt_text: string;
 }
 
-interface AmenityRow extends RowDataPacket {
+interface AmenityRow {
   villa_id: number;
   icon: string;
   text: string;
 }
 
-interface FeatureRow extends RowDataPacket {
+interface FeatureRow {
   villa_id: number;
   feature_text: string;
 }
 
 export async function GET(request: NextRequest) {
   try {
-    const connection = await getDbConnection();
+    const supabase = getSupabaseAdmin();
     
     // Get query parameters
     const { searchParams } = new URL(request.url);
@@ -51,19 +47,19 @@ export async function GET(request: NextRequest) {
     console.log('🔍 Fetching villas with optimized query...');
     const startTime = Date.now();
 
-    // Step 1: Get basic villa data (fast with indexes)
-    const villaQuery = `
-      SELECT id, slug, title, description, long_description, price, 
-             location, size, max_guests, status, created_at
-      FROM villa_types
-      WHERE status = ?
-      ORDER BY created_at DESC
-      LIMIT ?
-    `;
+    // Step 1: Get basic villa data
+    const { data: villas, error: villasError } = await supabase
+      .from('villa_types')
+      .select('id, slug, title, description, long_description, price, weekday_price, weekend_price, high_season_price, location, size, max_guests, status, created_at')
+      .eq('status', status)
+      .order('created_at', { ascending: false })
+      .limit(parseInt(limit, 10));
 
-    const [villas] = await connection.execute<VillaRow[]>(villaQuery, [status, parseInt(limit)]);
+    if (villasError) {
+      throw new Error(villasError.message);
+    }
     
-    if (villas.length === 0) {
+    if (!villas || villas.length === 0) {
       return NextResponse.json({
         success: true,
         data: [],
@@ -72,48 +68,55 @@ export async function GET(request: NextRequest) {
     }
 
     const villaIds = villas.map(v => v.id);
-    const placeholders = villaIds.map(() => '?').join(',');
 
-    // Step 2: Get primary images in one query (fast with new indexes)
-    const imageQuery = `
-      SELECT villa_id, image_url, alt_text
-      FROM villa_images
-      WHERE villa_id IN (${placeholders}) AND is_primary = 1
-      ORDER BY villa_id
-    `;
+    // Step 2: Get primary images in one query
+    const { data: images, error: imageError } = await supabase
+      .from('villa_images')
+      .select('villa_id, image_url, alt_text')
+      .in('villa_id', villaIds)
+      .eq('is_primary', true)
+      .order('villa_id', { ascending: true });
 
-    const [images] = await connection.execute<ImageRow[]>(imageQuery, villaIds);
+    if (imageError) {
+      throw new Error(imageError.message);
+    }
     
-    // Step 3: Get amenities in one query (fast with new indexes)  
-    const amenityQuery = `
-      SELECT villa_id, icon, text
-      FROM villa_amenities
-      WHERE villa_id IN (${placeholders})
-      ORDER BY villa_id
-    `;
+    // Step 3: Get amenities in one query
+    const { data: amenities, error: amenityError } = await supabase
+      .from('villa_amenities')
+      .select('villa_id, icon, text')
+      .in('villa_id', villaIds)
+      .order('villa_id', { ascending: true });
 
-    const [amenities] = await connection.execute<AmenityRow[]>(amenityQuery, villaIds);
+    if (amenityError) {
+      throw new Error(amenityError.message);
+    }
 
-    // Step 4: Get features in one query (fast with new indexes)
-    const featureQuery = `
-      SELECT villa_id, feature_text
-      FROM villa_features  
-      WHERE villa_id IN (${placeholders})
-      ORDER BY villa_id
-    `;
+    // Step 4: Get features in one query
+    const { data: features, error: featureError } = await supabase
+      .from('villa_features')
+      .select('villa_id, feature_text')
+      .in('villa_id', villaIds)
+      .order('villa_id', { ascending: true });
 
-    const [features] = await connection.execute<FeatureRow[]>(featureQuery, villaIds);
+    if (featureError) {
+      throw new Error(featureError.message);
+    }
 
     // Group data by villa_id for efficient lookup
     const imageMap = new Map<number, string>();
     const amenityMap = new Map<number, Array<{ icon: string; text: string }>>();
     const featureMap = new Map<number, string[]>();
 
-    images.forEach((img) => {
+    const safeImages = images ?? [];
+    const safeAmenities = amenities ?? [];
+    const safeFeatures = features ?? [];
+
+    safeImages.forEach((img) => {
       imageMap.set(img.villa_id, img.image_url);
     });
 
-    amenities.forEach((amenity) => {
+    safeAmenities.forEach((amenity) => {
       if (!amenityMap.has(amenity.villa_id)) {
         amenityMap.set(amenity.villa_id, []);
       }
@@ -123,7 +126,7 @@ export async function GET(request: NextRequest) {
       });
     });
 
-    features.forEach((feature) => {
+    safeFeatures.forEach((feature) => {
       if (!featureMap.has(feature.villa_id)) {
         featureMap.set(feature.villa_id, []);
       }

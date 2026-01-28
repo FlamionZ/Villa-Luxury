@@ -1,73 +1,72 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import { getDbConnection } from '@/lib/database';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
 export async function POST() {
   try {
     console.log('=== ADMIN SETUP START ===');
     
-    const connection = await getDbConnection();
-    
-    // Create admin_users table
-    console.log('Creating admin_users table...');
-    await connection.execute(`
-      CREATE TABLE IF NOT EXISTS admin_users (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        username VARCHAR(255) UNIQUE NOT NULL,
-        email VARCHAR(255) UNIQUE NOT NULL,
-        password_hash VARCHAR(255) NOT NULL,
-        role VARCHAR(50) DEFAULT 'admin',
-        is_active BOOLEAN DEFAULT TRUE,
-        last_login TIMESTAMP NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-      )
-    `);
-    console.log('✅ Admin_users table created/verified');
+    const supabase = getSupabaseAdmin();
     
     // Check if admin already exists
-    const [existing] = await connection.execute(
-      'SELECT id FROM admin_users WHERE username = ?',
-      ['Villadiengluxury']
-    );
+    const { data: existing, error: existingError } = await supabase
+      .from('admin_users')
+      .select('id')
+      .eq('username', 'Villadiengluxury')
+      .maybeSingle();
+
+    if (existingError) {
+      throw new Error(existingError.message);
+    }
     
-    if (Array.isArray(existing) && existing.length > 0) {
+    if (existing) {
       console.log('⚠️ Admin user already exists');
       
       // Update password anyway
       const defaultPassword = process.env.ADMIN_DEFAULT_PASSWORD || 'Mandadanyumna';
       const passwordHash = await bcrypt.hash(defaultPassword, 12);
-      
-      await connection.execute(
-        'UPDATE admin_users SET password_hash = ?, is_active = TRUE WHERE username = ?',
-        [passwordHash, 'Villadiengluxury']
-      );
+
+      const { error: updateError } = await supabase
+        .from('admin_users')
+        .update({ password_hash: passwordHash, is_active: true })
+        .eq('username', 'Villadiengluxury');
+
+      if (updateError) {
+        throw new Error(updateError.message);
+      }
       console.log('✅ Admin password updated');
     } else {
       // Create new admin user
       console.log('Creating new admin user...');
       const defaultPassword = process.env.ADMIN_DEFAULT_PASSWORD || 'Mandadanyumna';
       const passwordHash = await bcrypt.hash(defaultPassword, 12);
-      
-      await connection.execute(
-        'INSERT INTO admin_users (username, email, password_hash, role, is_active) VALUES (?, ?, ?, ?, ?)',
-        ['Villadiengluxury', 'villadiengluxury@gmail.com', passwordHash, 'admin', true]
-      );
+
+      const { error: insertError } = await supabase
+        .from('admin_users')
+        .insert({
+          username: 'Villadiengluxury',
+          email: 'villadiengluxury@gmail.com',
+          password_hash: passwordHash,
+          role: 'admin',
+          is_active: true
+        });
+
+      if (insertError) {
+        throw new Error(insertError.message);
+      }
       console.log('✅ New admin user created');
     }
     
     // Verify admin user
-    const [users] = await connection.execute(
-      'SELECT id, username, email, role, is_active FROM admin_users WHERE username = ?',
-      ['Villadiengluxury']
-    );
-    console.log('Final admin user:', users);
-    
-    // Release connection
-    if (connection && 'release' in connection) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (connection as any).release();
+    const { data: users, error: usersError } = await supabase
+      .from('admin_users')
+      .select('id, username, email, role, is_active')
+      .eq('username', 'Villadiengluxury');
+
+    if (usersError) {
+      throw new Error(usersError.message);
     }
+    console.log('Final admin user:', users);
     
     console.log('=== ADMIN SETUP COMPLETE ===');
     

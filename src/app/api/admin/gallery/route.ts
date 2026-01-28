@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDbConnection } from '@/lib/database';
 import { verifyAdminToken } from '@/lib/auth';
-import { RowDataPacket, ResultSetHeader } from 'mysql2';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
-interface GalleryItem extends RowDataPacket {
+interface GalleryItem {
   id: number;
   title: string;
   description: string;
@@ -11,8 +10,8 @@ interface GalleryItem extends RowDataPacket {
   alt_text: string;
   display_order: number;
   is_active: boolean;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
 }
 
 // GET - Fetch all gallery items for admin
@@ -26,28 +25,29 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const db = await getDbConnection();
+    const supabase = getSupabaseAdmin();
     
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '20');
     const offset = (page - 1) * limit;
     
-    // Get total count
-    const [countResult] = await db.execute<RowDataPacket[]>(
-      'SELECT COUNT(*) as total FROM gallery'
-    );
-    const total = countResult[0].total;
-    
-    // Get gallery items
-    const [galleryItems] = await db.execute<GalleryItem[]>(
-      'SELECT * FROM gallery ORDER BY display_order ASC, created_at DESC LIMIT ? OFFSET ?',
-      [limit, offset]
-    );
+    const { data: galleryItems, error, count } = await supabase
+      .from('gallery')
+      .select('*', { count: 'exact' })
+      .order('display_order', { ascending: true })
+      .order('created_at', { ascending: false })
+      .range(offset, offset + limit - 1);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    const total = count ?? 0;
     
     return NextResponse.json({
       success: true,
-      data: galleryItems,
+      data: galleryItems ?? [],
       pagination: {
         page,
         limit,
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const db = await getDbConnection();
+    const supabase = getSupabaseAdmin();
     const body = await request.json();
     
     const { title, description, image_url, alt_text, display_order, is_active } = body;
@@ -89,23 +89,26 @@ export async function POST(request: NextRequest) {
     }
 
     // Insert new gallery item
-    const [result] = await db.execute<ResultSetHeader>(
-      `INSERT INTO gallery (title, description, image_url, alt_text, display_order, is_active) 
-       VALUES (?, ?, ?, ?, ?, ?)`,
-      [title, description || '', image_url, alt_text || '', display_order || 0, is_active !== false]
-    );
+    const { data: newItem, error: insertError } = await supabase
+      .from('gallery')
+      .insert({
+        title,
+        description: description || '',
+        image_url,
+        alt_text: alt_text || '',
+        display_order: display_order || 0,
+        is_active: is_active !== false
+      })
+      .select('*')
+      .single<GalleryItem>();
 
-    const insertId = result.insertId;
-
-    // Fetch the created item
-    const [newItem] = await db.execute<GalleryItem[]>(
-      'SELECT * FROM gallery WHERE id = ?',
-      [insertId]
-    );
+    if (insertError) {
+      throw new Error(insertError.message);
+    }
 
     return NextResponse.json({
       success: true,
-      data: newItem[0],
+      data: newItem,
       message: 'Gallery item created successfully'
     });
   } catch (error) {

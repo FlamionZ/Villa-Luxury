@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDbConnection } from '@/lib/database';
 import { verifyAdminToken } from '@/lib/auth';
-import { RowDataPacket } from 'mysql2';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
-interface GalleryItem extends RowDataPacket {
+interface GalleryItem {
   id: number;
   title: string;
   description: string;
@@ -11,8 +10,8 @@ interface GalleryItem extends RowDataPacket {
   alt_text: string;
   display_order: number;
   is_active: boolean;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
 }
 
 // GET - Fetch single gallery item
@@ -29,15 +28,20 @@ export async function GET(
       );
     }
 
-    const db = await getDbConnection();
+    const supabase = getSupabaseAdmin();
     const { id } = await params;
 
-    const [rows] = await db.execute<GalleryItem[]>(
-      'SELECT * FROM gallery WHERE id = ?',
-      [id]
-    );
+    const { data: item, error } = await supabase
+      .from('gallery')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle<GalleryItem>();
 
-    if (rows.length === 0) {
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    if (!item) {
       return NextResponse.json(
         { success: false, error: 'Gallery item not found' },
         { status: 404 }
@@ -46,7 +50,7 @@ export async function GET(
 
     return NextResponse.json({
       success: true,
-      data: rows[0]
+      data: item
     });
   } catch (error) {
     console.error('Error fetching gallery item:', error);
@@ -71,7 +75,7 @@ export async function PUT(
       );
     }
 
-    const db = await getDbConnection();
+    const supabase = getSupabaseAdmin();
     const { id } = await params;
     const body = await request.json();
     
@@ -85,12 +89,17 @@ export async function PUT(
     }
 
     // Check if gallery item exists
-    const [existingRows] = await db.execute<RowDataPacket[]>(
-      'SELECT id FROM gallery WHERE id = ?',
-      [id]
-    );
+    const { data: existingItem, error: existingError } = await supabase
+      .from('gallery')
+      .select('id')
+      .eq('id', id)
+      .maybeSingle();
 
-    if (existingRows.length === 0) {
+    if (existingError) {
+      throw new Error(existingError.message);
+    }
+
+    if (!existingItem) {
       return NextResponse.json(
         { success: false, error: 'Gallery item not found' },
         { status: 404 }
@@ -98,28 +107,28 @@ export async function PUT(
     }
 
     // Update the gallery item
-    await db.execute(
-      `UPDATE gallery SET 
-        title = ?, 
-        description = ?, 
-        image_url = ?, 
-        alt_text = ?, 
-        display_order = ?, 
-        is_active = ?,
-        updated_at = CURRENT_TIMESTAMP 
-      WHERE id = ?`,
-      [title, description || '', image_url, alt_text || '', display_order || 0, is_active !== false, id]
-    );
+    const { data: updatedItem, error: updateError } = await supabase
+      .from('gallery')
+      .update({
+        title,
+        description: description || '',
+        image_url,
+        alt_text: alt_text || '',
+        display_order: display_order || 0,
+        is_active: is_active !== false,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id)
+      .select('*')
+      .single<GalleryItem>();
 
-    // Fetch updated item
-    const [updatedRows] = await db.execute<GalleryItem[]>(
-      'SELECT * FROM gallery WHERE id = ?',
-      [id]
-    );
+    if (updateError) {
+      throw new Error(updateError.message);
+    }
 
     return NextResponse.json({
       success: true,
-      data: updatedRows[0],
+      data: updatedItem,
       message: 'Gallery item updated successfully'
     });
   } catch (error) {
@@ -146,16 +155,21 @@ export async function DELETE(
       );
     }
 
-    const db = await getDbConnection();
+    const supabase = getSupabaseAdmin();
     const { id } = await params;
 
     // Check if gallery item exists
-    const [existingRows] = await db.execute<RowDataPacket[]>(
-      'SELECT id, title FROM gallery WHERE id = ?',
-      [id]
-    );
+    const { data: existingItem, error: existingError } = await supabase
+      .from('gallery')
+      .select('id, title')
+      .eq('id', id)
+      .maybeSingle();
 
-    if (existingRows.length === 0) {
+    if (existingError) {
+      throw new Error(existingError.message);
+    }
+
+    if (!existingItem) {
       return NextResponse.json(
         { success: false, error: 'Gallery item not found' },
         { status: 404 }
@@ -163,7 +177,14 @@ export async function DELETE(
     }
 
     // Delete the gallery item
-    await db.execute('DELETE FROM gallery WHERE id = ?', [id]);
+    const { error: deleteError } = await supabase
+      .from('gallery')
+      .delete()
+      .eq('id', id);
+
+    if (deleteError) {
+      throw new Error(deleteError.message);
+    }
 
     return NextResponse.json({
       success: true,

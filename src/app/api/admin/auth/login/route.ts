@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { getDbConnection } from '@/lib/database';
-import { RowDataPacket } from 'mysql2';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
-interface AdminUser extends RowDataPacket {
+interface AdminUser {
   id: number;
   username: string;
   email: string;
@@ -28,43 +27,44 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
-    console.log('🔗 Connecting to database...');
-    const connection = await getDbConnection();
-    console.log('✅ Database connected');
+    console.log('🔗 Connecting to Supabase...');
+    const supabase = getSupabaseAdmin();
+    console.log('✅ Supabase client ready');
     
-    // Check if admin_users table exists
-    console.log('🔍 Checking admin_users table...');
-    const [tables] = await connection.execute('SHOW TABLES LIKE "admin_users"');
-    console.log('Admin_users table exists:', Array.isArray(tables) && tables.length > 0);
-    
-    if (!Array.isArray(tables) || tables.length === 0) {
-      console.log('❌ Admin_users table does not exist');
+    // Find admin user
+    console.log('🔍 Searching for admin user...');
+    const { data: admin, error: adminError } = await supabase
+      .from('admin_users')
+      .select('*')
+      .eq('username', username)
+      .eq('is_active', true)
+      .maybeSingle<AdminUser>();
+
+    if (adminError) {
+      console.error('Supabase admin query error:', adminError.message);
       return NextResponse.json({
         success: false,
         message: 'Admin system not initialized. Please contact administrator.'
       }, { status: 500 });
     }
-    
-    // Find admin user
-    console.log('🔍 Searching for admin user...');
-    const [rows] = await connection.execute<AdminUser[]>(
-      'SELECT * FROM admin_users WHERE username = ? AND is_active = TRUE',
-      [username]
-    );
-    console.log('Query result count:', rows.length);
 
-    const admin = rows[0];
+    console.log('Query result count:', admin ? 1 : 0);
 
     if (!admin) {
       console.log('❌ Admin user not found or inactive');
       
       // Check if user exists but is inactive
-      const [inactiveRows] = await connection.execute<AdminUser[]>(
-        'SELECT * FROM admin_users WHERE username = ?',
-        [username]
-      );
-      
-      if (inactiveRows.length > 0) {
+      const { data: inactiveUser, error: inactiveError } = await supabase
+        .from('admin_users')
+        .select('*')
+        .eq('username', username)
+        .maybeSingle<AdminUser>();
+
+      if (inactiveError) {
+        console.error('Supabase inactive user query error:', inactiveError.message);
+      }
+
+      if (inactiveUser) {
         console.log('User exists but is inactive');
         return NextResponse.json({
           success: false,
@@ -97,18 +97,15 @@ export async function POST(request: NextRequest) {
 
     // Update last login
     console.log('📝 Updating last login...');
-    await connection.execute(
-      'UPDATE admin_users SET last_login = NOW() WHERE id = ?',
-      [admin.id]
-    );
-    console.log('✅ Last login updated');
+    const { error: updateError } = await supabase
+      .from('admin_users')
+      .update({ last_login: new Date().toISOString() })
+      .eq('id', admin.id);
 
-    // Release connection
-    if (connection && 'release' in connection) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (connection as any).release();
-      console.log('🔄 Database connection released');
+    if (updateError) {
+      console.error('Failed to update last_login:', updateError.message);
     }
+    console.log('✅ Last login updated');
 
     // Generate JWT token
     console.log('🎫 Generating JWT token...');

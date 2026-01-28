@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyAdminToken } from '@/lib/auth';
-import { getDbConnection } from '@/lib/database';
-import { RowDataPacket } from 'mysql2';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
-interface GalleryItem extends RowDataPacket {
+interface GalleryItem {
   id: number;
   is_active: boolean;
 }
@@ -22,29 +21,38 @@ export async function PATCH(
     }
 
     const { id: galleryId } = await params;
-    const connection = await getDbConnection();
+    const supabase = getSupabaseAdmin();
 
     // Get current status
-    const [rows] = await connection.execute<GalleryItem[]>(
-      'SELECT id, is_active FROM gallery WHERE id = ?',
-      [galleryId]
-    );
+    const { data: item, error: itemError } = await supabase
+      .from('gallery')
+      .select('id, is_active')
+      .eq('id', galleryId)
+      .maybeSingle<GalleryItem>();
 
-    if (rows.length === 0) {
+    if (itemError) {
+      throw new Error(itemError.message);
+    }
+
+    if (!item) {
       return NextResponse.json(
         { success: false, error: 'Gallery item not found' },
         { status: 404 }
       );
     }
 
-    const currentStatus = rows[0].is_active;
+    const currentStatus = item.is_active;
     const newStatus = !currentStatus;
 
     // Update status
-    await connection.execute(
-      'UPDATE gallery SET is_active = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-      [newStatus, galleryId]
-    );
+    const { error: updateError } = await supabase
+      .from('gallery')
+      .update({ is_active: newStatus, updated_at: new Date().toISOString() })
+      .eq('id', galleryId);
+
+    if (updateError) {
+      throw new Error(updateError.message);
+    }
 
     return NextResponse.json({
       success: true,
