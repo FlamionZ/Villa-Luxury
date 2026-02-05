@@ -15,7 +15,7 @@ Mohon informasi mengenai:
 
 Terima kasih! 🙏`;
 
-    const whatsappUrl = `https://wa.me/+6282234898455?text=${encodeURIComponent(defaultMessage)}`;
+    const whatsappUrl = `https://wa.me/622136296229?text=${encodeURIComponent(defaultMessage)}`;
     window.open(whatsappUrl, '_blank');
   };
 

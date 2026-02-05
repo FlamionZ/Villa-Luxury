@@ -103,7 +103,7 @@ export default function VillaDetailPage() {
 
   const handleBookNow = () => {
     const message = `Halo, saya tertarik untuk memesan ${villa.title} dengan harga Rp ${formatRupiahNumber(villa.price)}/malam. Bisakah Anda memberikan informasi lebih lanjut?`;
-    const whatsappUrl = `https://wa.me/+6282234898455?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/622136296229?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 
@@ -384,15 +384,15 @@ export default function VillaDetailPage() {
               <div className="contact-card">
                 <h3>Butuh Bantuan?</h3>
                 <div className="contact-methods">
-                  <a href="tel:+6282234898455" className="contact-method">
+                  <a href="tel:+622136296229" className="contact-method">
                     <i className="fas fa-phone"></i>
-                    <span>+62 822-3489-8455</span>
+                    <span>+622136296229</span>
                   </a>
                   <a href="mailto:villadiengluxury@gmail.com" className="contact-method">
                     <i className="fas fa-envelope"></i>
                     <span>villadiengluxury@gmail.com</span>
                   </a>
-                  <a href="https://wa.me/+6282234898455" className="contact-method" target="_blank">
+                  <a href="https://wa.me/622136296229" className="contact-method" target="_blank">
                     <i className="fab fa-whatsapp"></i>
                     <span>WhatsApp Chat</span>
                   </a>

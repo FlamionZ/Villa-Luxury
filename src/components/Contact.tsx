@@ -28,7 +28,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <h4>Telepon</h4>
-                  <p>+62 822 3489 8455</p>
+                  <p>+622136296229</p>
                 </div>
               </div>
               <div className="contact-item">
@@ -49,7 +49,7 @@ export default function Contact() {
               
               <div className="contact-buttons">
                 <a 
-                  href="https://wa.me/+6282234898455?text=Halo,%20saya%20tertarik%20untuk%20reservasi%20villa"
+                  href="https://wa.me/622136296229?text=Halo,%20saya%20tertarik%20untuk%20reservasi%20villa"
                   className="btn btn-whatsapp"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -59,7 +59,7 @@ export default function Contact() {
                 </a>
                 
                 <a 
-                  href="tel:+6282234898455"
+                  href="tel:+622136296229"
                   className="btn btn-phone"
                 >
                   <i className="fas fa-phone"></i>
