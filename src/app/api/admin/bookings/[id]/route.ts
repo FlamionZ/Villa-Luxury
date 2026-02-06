@@ -10,6 +10,8 @@ interface BookingFormData {
   check_in: string;
   check_out: string;
   guests_count: number;
+  extra_bed_count?: number;
+  extra_bed_price?: number;
   special_requests?: string;
   status?: string;
   booking_source?: string;
@@ -24,6 +26,9 @@ interface BookingWithVilla {
   check_in: string;
   check_out: string;
   guests_count: number;
+  extra_bed_count: number;
+  extra_bed_price: number;
+  extra_bed_total: number;
   total_nights: number;
   total_price: number;
   special_requests?: string;
@@ -39,6 +44,8 @@ interface CurrentBooking {
   villa_id: number;
   check_in_date: string;
   check_out_date: string;
+  extra_bed_count: number | null;
+  extra_bed_price: number | null;
 }
 
 interface VillaPrice {
@@ -54,6 +61,9 @@ interface BookingRow {
   check_in_date: string;
   check_out_date: string;
   num_guests: number;
+  extra_bed_count: number | null;
+  extra_bed_price: number | null;
+  extra_bed_total: number | null;
   total_price: number;
   special_requests?: string | null;
   status: string;
@@ -82,7 +92,7 @@ export async function GET(
     const { data: row, error } = await supabase
       .from('bookings')
       .select(
-        'id, villa_id, guest_name, guest_email, guest_phone, check_in_date, check_out_date, num_guests, total_price, special_requests, status, booking_source, created_at, villa: villa_types(title, slug, price)'
+        'id, villa_id, guest_name, guest_email, guest_phone, check_in_date, check_out_date, num_guests, extra_bed_count, extra_bed_price, extra_bed_total, total_price, special_requests, status, booking_source, created_at, villa: villa_types(title, slug, price)'
       )
       .eq('id', bookingId)
       .maybeSingle<BookingRow>();
@@ -108,6 +118,9 @@ export async function GET(
       check_in: row.check_in_date,
       check_out: row.check_out_date,
       guests_count: row.num_guests,
+      extra_bed_count: row.extra_bed_count || 0,
+      extra_bed_price: row.extra_bed_price || 0,
+      extra_bed_total: row.extra_bed_total || 0,
       total_nights: totalNights,
       total_price: row.total_price,
       special_requests: row.special_requests || undefined,
@@ -166,6 +179,16 @@ export async function PUT(
         return;
       }
 
+      if (key === 'extra_bed_count') {
+        updatePayload.extra_bed_count = value as number;
+        return;
+      }
+
+      if (key === 'extra_bed_price') {
+        updatePayload.extra_bed_price = value as number;
+        return;
+      }
+
       updatePayload[key] = value as string | number | boolean | null;
     });
 
@@ -173,11 +196,11 @@ export async function PUT(
       return NextResponse.json({ success: false, error: 'No fields to update' }, { status: 400 });
     }
 
-    // If check_in or check_out is being updated, recalculate total_nights and total_price
-    if (body.check_in || body.check_out) {
+    // If check_in/check_out or extra bed is updated, recalculate totals
+    if (body.check_in || body.check_out || body.extra_bed_count !== undefined || body.extra_bed_price !== undefined) {
       const { data: currentBooking, error: currentError } = await supabase
         .from('bookings')
-        .select('villa_id, check_in_date, check_out_date')
+        .select('villa_id, check_in_date, check_out_date, extra_bed_count, extra_bed_price')
         .eq('id', bookingId)
         .maybeSingle<CurrentBooking>();
 
@@ -203,8 +226,16 @@ export async function PUT(
           throw new Error(villaError.message);
         }
 
-        const total_price = (villaRow?.price || 0) * total_nights;
+        const extraBedCount = body.extra_bed_count !== undefined
+          ? body.extra_bed_count
+          : (currentBooking.extra_bed_count || 0);
+        const extraBedPrice = body.extra_bed_price !== undefined
+          ? body.extra_bed_price
+          : (currentBooking.extra_bed_price || 0);
+        const extraBedTotal = Math.max(0, extraBedCount) * Math.max(0, extraBedPrice) * total_nights;
+        const total_price = (villaRow?.price || 0) * total_nights + extraBedTotal;
         updatePayload.total_nights = total_nights;
+        updatePayload.extra_bed_total = extraBedTotal;
         updatePayload.total_price = total_price;
       }
     }

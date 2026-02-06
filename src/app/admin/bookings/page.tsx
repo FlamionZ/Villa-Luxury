@@ -14,6 +14,9 @@ interface Booking {
   check_in: string;
   check_out: string;
   guests_count: number;
+  extra_bed_count: number;
+  extra_bed_price: number;
+  extra_bed_total: number;
   total_nights: number;
   total_price: number;
   status: 'pending' | 'confirmed' | 'cancelled' | 'completed';

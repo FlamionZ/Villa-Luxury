@@ -10,6 +10,8 @@ interface BookingFormData {
   check_in: string;
   check_out: string;
   guests_count: number;
+  extra_bed_count?: number;
+  extra_bed_price?: number;
   special_requests?: string;
   status?: string;
   booking_source?: string;
@@ -24,6 +26,9 @@ interface BookingWithVilla {
   check_in: string;
   check_out: string;
   guests_count: number;
+  extra_bed_count: number;
+  extra_bed_price: number;
+  extra_bed_total: number;
   total_price: number;
   special_requests?: string;
   status: string;
@@ -43,6 +48,9 @@ interface BookingRow {
   check_in_date: string;
   check_out_date: string;
   num_guests: number;
+  extra_bed_count: number | null;
+  extra_bed_price: number | null;
+  extra_bed_total: number | null;
   total_price: number;
   special_requests?: string | null;
   status: string;
@@ -65,7 +73,7 @@ export const GET = requireAdmin(async (request: NextRequest) => {
     let query = supabase
       .from('bookings')
       .select(
-        'id, villa_id, guest_name, guest_email, guest_phone, check_in_date, check_out_date, num_guests, total_price, special_requests, status, created_at, updated_at, villa: villa_types(title, slug)',
+        'id, villa_id, guest_name, guest_email, guest_phone, check_in_date, check_out_date, num_guests, extra_bed_count, extra_bed_price, extra_bed_total, total_price, special_requests, status, created_at, updated_at, villa: villa_types(title, slug)',
         { count: 'exact' }
       )
       .order('created_at', { ascending: false })
@@ -105,6 +113,9 @@ export const GET = requireAdmin(async (request: NextRequest) => {
         check_in: checkInDate,
         check_out: checkOutDate,
         guests_count: booking.num_guests,
+        extra_bed_count: booking.extra_bed_count || 0,
+        extra_bed_price: booking.extra_bed_price || 0,
+        extra_bed_total: booking.extra_bed_total || 0,
         total_price: booking.total_price,
         special_requests: booking.special_requests || undefined,
         status: booking.status,
@@ -140,7 +151,10 @@ export const POST = requireAdmin(async (request: NextRequest) => {
     const body: BookingFormData = await request.json();
     const {
       villa_id, guest_name, guest_email, guest_phone, check_in, check_out,
-      guests_count, special_requests, status = 'pending'
+      guests_count, special_requests, status = 'pending',
+      extra_bed_count = 0,
+      extra_bed_price = 0,
+      booking_source = 'admin'
     } = body;
 
     const supabase = getSupabaseAdmin();
@@ -165,7 +179,8 @@ export const POST = requireAdmin(async (request: NextRequest) => {
       return NextResponse.json({ success: false, error: 'Villa not found' }, { status: 404 });
     }
 
-    const total_price = villaRow.price * total_nights;
+    const extraBedTotal = Math.max(0, extra_bed_count) * Math.max(0, extra_bed_price) * total_nights;
+    const total_price = (villaRow.price * total_nights) + extraBedTotal;
 
     // Check for conflicts
     const { data: conflicts, error: conflictError } = await supabase
@@ -199,9 +214,13 @@ export const POST = requireAdmin(async (request: NextRequest) => {
         check_in_date: check_in,
         check_out_date: check_out,
         num_guests: guests_count,
+        extra_bed_count: Math.max(0, extra_bed_count),
+        extra_bed_price: Math.max(0, extra_bed_price),
+        extra_bed_total: extraBedTotal,
         total_price,
         special_requests,
-        status
+        status,
+        booking_source
       })
       .select('id')
       .single();

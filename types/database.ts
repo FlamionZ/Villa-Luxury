@@ -49,6 +49,9 @@ export interface Booking {
   check_in: string;
   check_out: string;
   guests_count: number;
+  extra_bed_count: number;
+  extra_bed_price: number;
+  extra_bed_total: number;
   total_nights: number;
   total_price: number;
   special_requests: string;
@@ -87,6 +90,8 @@ export interface BookingFormData {
   check_in: string;
   check_out: string;
   guests_count: number;
+  extra_bed_count?: number;
+  extra_bed_price?: number;
   special_requests?: string;
   status?: 'pending' | 'confirmed' | 'cancelled' | 'completed';
   booking_source?: 'website' | 'whatsapp' | 'phone' | 'admin';

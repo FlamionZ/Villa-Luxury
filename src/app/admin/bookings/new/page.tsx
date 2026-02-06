@@ -21,6 +21,8 @@ interface BookingForm {
   check_in: string;
   check_out: string;
   guests_count: string;
+  extra_bed_count: string;
+  extra_bed_price: string;
   special_requests: string;
   status: string;
   booking_source: string;
@@ -39,6 +41,8 @@ export default function NewBookingPage() {
     check_in: '',
     check_out: '',
     guests_count: '2',
+    extra_bed_count: '0',
+    extra_bed_price: '0',
     special_requests: '',
     status: 'pending',
     booking_source: 'admin'
@@ -70,12 +74,15 @@ export default function NewBookingPage() {
     }
 
     const selectedVilla = villas.find(v => v.id === parseInt(formData.villa_id));
+    const extraBedCount = parseInt(formData.extra_bed_count || '0', 10) || 0;
+    const extraBedPrice = parseInt(formData.extra_bed_price || '0', 10) || 0;
     if (selectedVilla) {
-      const total = daysDiff * selectedVilla.price;
+      const extraBedTotal = extraBedCount * extraBedPrice * daysDiff;
+      const total = (daysDiff * selectedVilla.price) + extraBedTotal;
       setTotalNights(daysDiff);
       setTotalPrice(total);
     }
-  }, [formData.villa_id, formData.check_in, formData.check_out, villas]);
+  }, [formData.villa_id, formData.check_in, formData.check_out, formData.extra_bed_count, formData.extra_bed_price, villas]);
 
   useEffect(() => {
     calculateTotals();
@@ -123,6 +130,8 @@ export default function NewBookingPage() {
     if (!formData.check_in) newErrors.check_in = 'Check-in date is required';
     if (!formData.check_out) newErrors.check_out = 'Check-out date is required';
     if (!formData.guests_count) newErrors.guests_count = 'Number of guests is required';
+    if (parseInt(formData.extra_bed_count || '0', 10) < 0) newErrors.extra_bed_count = 'Extra bed count cannot be negative';
+    if (parseInt(formData.extra_bed_price || '0', 10) < 0) newErrors.extra_bed_price = 'Extra bed price cannot be negative';
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -176,7 +185,9 @@ export default function NewBookingPage() {
         body: JSON.stringify({
           ...formData,
           villa_id: parseInt(formData.villa_id),
-          guests_count: parseInt(formData.guests_count)
+          guests_count: parseInt(formData.guests_count),
+          extra_bed_count: parseInt(formData.extra_bed_count || '0', 10),
+          extra_bed_price: parseInt(formData.extra_bed_price || '0', 10)
         }),
       });
 
@@ -445,6 +456,38 @@ export default function NewBookingPage() {
                   </div>
                 </div>
 
+                <div className="form-row">
+                  <div className="form-group">
+                    <label htmlFor="extra_bed_count">Extra Bed Count</label>
+                    <input
+                      type="number"
+                      id="extra_bed_count"
+                      name="extra_bed_count"
+                      min={0}
+                      value={formData.extra_bed_count}
+                      onChange={handleInputChange}
+                      className={`form-control ${errors.extra_bed_count ? 'error' : ''}`}
+                      placeholder="0"
+                    />
+                    {errors.extra_bed_count && <span className="error-message">{errors.extra_bed_count}</span>}
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="extra_bed_price">Extra Bed Price (per night)</label>
+                    <input
+                      type="number"
+                      id="extra_bed_price"
+                      name="extra_bed_price"
+                      min={0}
+                      value={formData.extra_bed_price}
+                      onChange={handleInputChange}
+                      className={`form-control ${errors.extra_bed_price ? 'error' : ''}`}
+                      placeholder="0"
+                    />
+                    {errors.extra_bed_price && <span className="error-message">{errors.extra_bed_price}</span>}
+                  </div>
+                </div>
+
                 <div className="form-group">
                   <label htmlFor="special_requests">Special Requests</label>
                   <textarea
@@ -472,6 +515,14 @@ export default function NewBookingPage() {
                       <span>Price per Night:</span>
                       <strong>{formatPrice(totalPrice / totalNights)}</strong>
                     </div>
+                    {parseInt(formData.extra_bed_count || '0', 10) > 0 && (
+                      <div className="summary-row">
+                        <span>Extra Bed:</span>
+                        <strong>
+                          {formData.extra_bed_count} x {formatPrice(parseInt(formData.extra_bed_price || '0', 10))} / night
+                        </strong>
+                      </div>
+                    )}
                     <div className="summary-row total">
                       <span>Total Price:</span>
                       <strong>{formatPrice(totalPrice)}</strong>
