@@ -178,16 +178,16 @@ export default function AdminDashboard() {
           <div className="dashboard-section">
             <h2>Quick Actions</h2>
             <div className="quick-actions">
-              <Link href="/admin/bookings/new" className="action-card">
-                <i className="fas fa-plus"></i>
-                <h3>New Booking</h3>
-                <p>Create a new booking</p>
+              <Link href="/admin/bookings" className="action-card">
+                <i className="fas fa-calendar-check"></i>
+                <h3>Bookings</h3>
+                <p>Manage and create bookings</p>
               </Link>
               
-              <Link href="/admin/villas/new" className="action-card">
+              <Link href="/admin/villas" className="action-card">
                 <i className="fas fa-home"></i>
-                <h3>Add Villa</h3>
-                <p>Add a new villa type</p>
+                <h3>Villas</h3>
+                <p>Manage villa inventory</p>
               </Link>
               
               <Link href="/admin/bookings?status=pending" className="action-card">
