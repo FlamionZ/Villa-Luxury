@@ -41,19 +41,28 @@ export async function GET(request: NextRequest) {
     
     // Get query parameters
     const { searchParams } = new URL(request.url);
-    const limit = searchParams.get('limit') || '10';
+    const limitParam = searchParams.get('limit');
     const status = searchParams.get('status') || 'active';
 
     console.log('🔍 Fetching villas with optimized query...');
     const startTime = Date.now();
 
     // Step 1: Get basic villa data
-    const { data: villas, error: villasError } = await supabase
+    let villasQuery = supabase
       .from('villa_types')
       .select('id, slug, title, description, long_description, price, weekday_price, weekend_price, high_season_price, location, size, max_guests, status, created_at')
       .eq('status', status)
       .order('created_at', { ascending: false })
-      .limit(parseInt(limit, 10));
+      ;
+
+    if (limitParam) {
+      const limitValue = parseInt(limitParam, 10);
+      if (!Number.isNaN(limitValue) && limitValue > 0) {
+        villasQuery = villasQuery.limit(limitValue);
+      }
+    }
+
+    const { data: villas, error: villasError } = await villasQuery;
 
     if (villasError) {
       throw new Error(villasError.message);

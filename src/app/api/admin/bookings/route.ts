@@ -204,26 +204,44 @@ export const POST = requireAdmin(async (request: NextRequest) => {
       );
     }
 
-    const { data: createdBooking, error: insertError } = await supabase
+    const allowedSources = new Set(['website', 'whatsapp', 'phone', 'admin', 'email', 'walk-in']);
+    const normalizedSource = allowedSources.has(booking_source) ? booking_source : 'admin';
+    const buildInsertPayload = (source: string) => ({
+      villa_id,
+      guest_name,
+      guest_email,
+      guest_phone,
+      check_in_date: check_in,
+      check_out_date: check_out,
+      num_guests: guests_count,
+      extra_bed_count: Math.max(0, extra_bed_count),
+      extra_bed_price: Math.max(0, extra_bed_price),
+      extra_bed_total: extraBedTotal,
+      total_price,
+      special_requests,
+      status,
+      booking_source: source
+    });
+
+    let { data: createdBooking, error: insertError } = await supabase
       .from('bookings')
-      .insert({
-        villa_id,
-        guest_name,
-        guest_email,
-        guest_phone,
-        check_in_date: check_in,
-        check_out_date: check_out,
-        num_guests: guests_count,
-        extra_bed_count: Math.max(0, extra_bed_count),
-        extra_bed_price: Math.max(0, extra_bed_price),
-        extra_bed_total: extraBedTotal,
-        total_price,
-        special_requests,
-        status,
-        booking_source
-      })
+      .insert(buildInsertPayload(normalizedSource))
       .select('id')
       .single();
+
+    if (insertError) {
+      const message = insertError.message || '';
+      const isBookingSourceConstraint = message.includes('booking_source') && message.includes('constraint');
+      if (isBookingSourceConstraint && normalizedSource !== 'admin') {
+        const retry = await supabase
+          .from('bookings')
+          .insert(buildInsertPayload('admin'))
+          .select('id')
+          .single();
+        createdBooking = retry.data ?? null;
+        insertError = retry.error ?? null;
+      }
+    }
 
     if (insertError) {
       throw new Error(insertError.message);
@@ -237,6 +255,7 @@ export const POST = requireAdmin(async (request: NextRequest) => {
     });
   } catch (error) {
     console.error('Error creating booking:', error);
-    return NextResponse.json({ success: false, error: 'Failed to create booking' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Failed to create booking';
+    return NextResponse.json({ success: false, error: errorMessage }, { status: 500 });
   }
 });

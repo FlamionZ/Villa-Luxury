@@ -61,7 +61,7 @@ CREATE TABLE bookings (
   total_price DECIMAL(10,2),
   special_requests TEXT,
   status ENUM('pending', 'confirmed', 'cancelled', 'completed') DEFAULT 'pending',
-  booking_source ENUM('website', 'whatsapp', 'phone', 'admin') DEFAULT 'website',
+  booking_source ENUM('website', 'whatsapp', 'phone', 'admin', 'email', 'walk-in') DEFAULT 'website',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (villa_id) REFERENCES villa_types(id)

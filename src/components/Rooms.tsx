@@ -96,7 +96,7 @@ export default function Rooms() {
   useEffect(() => {
     const fetchVillas = async () => {
       try {
-        const response = await fetch('/api/villas?status=active&limit=6');
+        const response = await fetch('/api/villas?status=active');
         const data = await response.json();
         
         if (data.success) {

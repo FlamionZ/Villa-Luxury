@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS bookings (
   total_price NUMERIC(12,2),
   special_requests TEXT,
   status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','confirmed','cancelled','completed','rejected')),
-  booking_source TEXT NOT NULL DEFAULT 'website' CHECK (booking_source IN ('website','whatsapp','phone','admin')),
+  booking_source TEXT NOT NULL DEFAULT 'website' CHECK (booking_source IN ('website','whatsapp','phone','admin','email','walk-in')),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

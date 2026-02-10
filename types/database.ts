@@ -56,7 +56,7 @@ export interface Booking {
   total_price: number;
   special_requests: string;
   status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
-  booking_source: 'website' | 'whatsapp' | 'phone' | 'admin';
+  booking_source: 'website' | 'whatsapp' | 'phone' | 'admin' | 'email' | 'walk-in';
   created_at: Date;
   updated_at: Date;
   villa?: VillaType;
@@ -94,7 +94,7 @@ export interface BookingFormData {
   extra_bed_price?: number;
   special_requests?: string;
   status?: 'pending' | 'confirmed' | 'cancelled' | 'completed';
-  booking_source?: 'website' | 'whatsapp' | 'phone' | 'admin';
+  booking_source?: 'website' | 'whatsapp' | 'phone' | 'admin' | 'email' | 'walk-in';
 }
 
 export interface VillaFormData {
