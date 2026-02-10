@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { formatRupiahNumber } from '@/lib/utils';
 import { getPricingCategory } from '@/lib/pricing';
 
-interface BookingDate {
-  date: string;
-  villaType: string;
-  guestName: string;
+interface BookingRange {
+  check_in_date: string;
+  check_out_date: string;
+  status: string;
 }
 
 interface VillaPricing {
@@ -17,7 +17,7 @@ interface VillaPricing {
 }
 
 interface CalendarProps {
-  selectedVilla: string;
+  villaId: number;
   onDateSelect: (date: string) => void;
   selectedCheckIn: string;
   selectedCheckOut: string;
@@ -26,7 +26,7 @@ interface CalendarProps {
 }
 
 export default function BookingCalendar({ 
-  selectedVilla, 
+  villaId,
   onDateSelect, 
   selectedCheckIn, 
   selectedCheckOut, 
@@ -34,15 +34,17 @@ export default function BookingCalendar({
   showPricing = false 
 }: CalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [bookedDates, setBookedDates] = useState<BookingDate[]>([]);
+  const [bookedRanges, setBookedRanges] = useState<BookingRange[]>([]);
+  const [loadingAvailability, setLoadingAvailability] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
-  // Debug logging
-  console.log("BookingCalendar props:", {
-    villaPricing,
-    showPricing,
-    selectedVilla
-  });
+  const formatIsoDate = (date: Date) => {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  };
+
+  const parseIsoDate = (dateStr: string) => {
+    return new Date(`${dateStr}T12:00:00`);
+  };
 
   // Function to get price for a specific date
   const getPriceForDate = (date: Date): number => {
@@ -81,38 +83,29 @@ export default function BookingCalendar({
     setIsClient(true);
   }, []);
 
-  // Simulasi data booking yang sudah ada
   useEffect(() => {
-    const mockBookedDates: BookingDate[] = [
-      // Agustus 2025
-      { date: '2025-08-12', villaType: 'deluxe', guestName: 'Anna Williams' },
-      { date: '2025-08-13', villaType: 'deluxe', guestName: 'Anna Williams' },
-      { date: '2025-08-15', villaType: 'deluxe', guestName: 'John Smith' },
-      { date: '2025-08-16', villaType: 'deluxe', guestName: 'John Smith' },
-      { date: '2025-08-17', villaType: 'deluxe', guestName: 'John Smith' },
-      { date: '2025-08-18', villaType: 'ocean', guestName: 'Robert Miller' },
-      { date: '2025-08-19', villaType: 'ocean', guestName: 'Robert Miller' },
-      { date: '2025-08-20', villaType: 'ocean', guestName: 'Sarah Johnson' },
-      { date: '2025-08-21', villaType: 'ocean', guestName: 'Sarah Johnson' },
-      { date: '2025-08-22', villaType: 'ocean', guestName: 'Sarah Johnson' },
-      { date: '2025-08-23', villaType: 'presidential', guestName: 'Lisa Garcia' },
-      { date: '2025-08-24', villaType: 'presidential', guestName: 'Lisa Garcia' },
-      { date: '2025-08-25', villaType: 'presidential', guestName: 'Michael Brown' },
-      { date: '2025-08-26', villaType: 'presidential', guestName: 'Michael Brown' },
-      { date: '2025-08-27', villaType: 'presidential', guestName: 'Michael Brown' },
-      { date: '2025-08-28', villaType: 'presidential', guestName: 'Michael Brown' },
-      { date: '2025-08-30', villaType: 'deluxe', guestName: 'Thomas Anderson' },
-      { date: '2025-08-31', villaType: 'deluxe', guestName: 'Thomas Anderson' },
-      
-      // September 2025
-      { date: '2025-09-01', villaType: 'deluxe', guestName: 'Thomas Anderson' },
-      { date: '2025-09-06', villaType: 'deluxe', guestName: 'Emma Davis' },
-      { date: '2025-09-12', villaType: 'ocean', guestName: 'David Wilson' },
-      { date: '2025-09-13', villaType: 'ocean', guestName: 'David Wilson' },
-      { date: '2025-09-14', villaType: 'ocean', guestName: 'David Wilson' },
-    ];
-    setBookedDates(mockBookedDates);
-  }, []);
+    const fetchAvailability = async () => {
+      try {
+        setLoadingAvailability(true);
+        const response = await fetch(`/api/bookings?villa_id=${villaId}`);
+        const data = await response.json();
+        if (data.success) {
+          setBookedRanges(data.data || []);
+        } else {
+          setBookedRanges([]);
+        }
+      } catch (error) {
+        console.error('Error fetching availability:', error);
+        setBookedRanges([]);
+      } finally {
+        setLoadingAvailability(false);
+      }
+    };
+
+    if (villaId) {
+      fetchAvailability();
+    }
+  }, [villaId]);
 
   const monthNames = [
     'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
@@ -133,20 +126,27 @@ export default function BookingCalendar({
     return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
   };
 
+  const bookedDateSet = useMemo(() => {
+    const dates = new Set<string>();
+
+    bookedRanges.forEach((range) => {
+      if (!range.check_in_date || !range.check_out_date) return;
+      const checkIn = parseIsoDate(range.check_in_date);
+      const checkOut = parseIsoDate(range.check_out_date);
+      if (Number.isNaN(checkIn.getTime()) || Number.isNaN(checkOut.getTime())) return;
+
+      const cursor = new Date(checkIn.getTime());
+      while (cursor < checkOut) {
+        dates.add(formatIsoDate(cursor));
+        cursor.setDate(cursor.getDate() + 1);
+      }
+    });
+
+    return dates;
+  }, [bookedRanges]);
+
   const isDateBooked = (dateStr: string) => {
-    // Map villa titles to villa types
-    const villaTypeMap: { [key: string]: string } = {
-      'Deluxe Villa': 'deluxe',
-      'Ocean View Villa': 'ocean',
-      'Presidential Suite': 'presidential'
-    };
-    
-    const villaType = villaTypeMap[selectedVilla] || selectedVilla.toLowerCase();
-    
-    return bookedDates.some(booking => 
-      booking.date === dateStr && 
-      booking.villaType === villaType
-    );
+    return bookedDateSet.has(dateStr);
   };
 
   const isDateSelected = (dateStr: string) => {
@@ -167,8 +167,7 @@ export default function BookingCalendar({
     const days = [];
 
     // Debug: Check selected villa and booked dates
-    console.log('Selected Villa:', selectedVilla);
-    console.log('Booked Dates:', bookedDates);
+    console.log('Booked Dates:', bookedDateSet.size);
 
     // Empty cells for days before the first day of the month
     for (let i = 0; i < firstDay; i++) {
@@ -300,6 +299,10 @@ export default function BookingCalendar({
           <div className="calendar-grid" suppressHydrationWarning>
             {renderCalendar()}
           </div>
+
+          {loadingAvailability && (
+            <div className="loading-message">Memuat ketersediaan...</div>
+          )}
           
           <div className="calendar-legend">
             <div className="legend-item">

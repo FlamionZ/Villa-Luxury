@@ -9,13 +9,13 @@ interface BookingDate {
 }
 
 interface CalendarProps {
-  selectedVilla: string;
+  villaId: number;
   onDateSelect: (date: string) => void;
   selectedCheckIn: string;
   selectedCheckOut: string;
 }
 
-export default function BookingCalendar({ selectedVilla, onDateSelect, selectedCheckIn, selectedCheckOut }: CalendarProps) {
+export default function BookingCalendar({ onDateSelect, selectedCheckIn, selectedCheckOut }: CalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [bookedDates, setBookedDates] = useState<BookingDate[]>([]);
 
@@ -61,10 +61,7 @@ export default function BookingCalendar({ selectedVilla, onDateSelect, selectedC
   };
 
   const isDateBooked = (dateStr: string) => {
-    return bookedDates.some(booking => 
-      booking.date === dateStr && 
-      booking.villaType === selectedVilla
-    );
+    return bookedDates.some(booking => booking.date === dateStr);
   };
 
   const isDateSelected = (dateStr: string) => {

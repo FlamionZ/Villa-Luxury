@@ -208,7 +208,7 @@ export default function Rooms() {
                   <div className="room-detail-content">
                     <h4>Pilih Tanggal Booking</h4>
                     <BookingCalendar 
-                      selectedVilla={villa.title}
+                      villaId={villa.id}
                       onDateSelect={handleDateSelect}
                       selectedCheckIn={selectedDates.checkIn}
                       selectedCheckOut={selectedDates.checkOut}

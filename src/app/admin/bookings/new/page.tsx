@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import ProtectedRoute from '@/components/ProtectedRoute';
 
@@ -30,6 +30,7 @@ interface BookingForm {
 
 export default function NewBookingPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [villas, setVillas] = useState<Villa[]>([]);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -54,6 +55,22 @@ export default function NewBookingPage() {
   useEffect(() => {
     fetchVillas();
   }, []);
+
+  useEffect(() => {
+    const villaIdParam = searchParams.get('villa_id');
+    const checkInParam = searchParams.get('check_in');
+    const checkOutParam = searchParams.get('check_out');
+
+    if (!villaIdParam && !checkInParam && !checkOutParam) return;
+
+    setFormData(prev => {
+      const next = { ...prev };
+      if (villaIdParam && !prev.villa_id) next.villa_id = villaIdParam;
+      if (checkInParam && !prev.check_in) next.check_in = checkInParam;
+      if (checkOutParam && !prev.check_out) next.check_out = checkOutParam;
+      return next;
+    });
+  }, [searchParams]);
 
   const calculateTotals = useCallback(() => {
     if (!formData.villa_id || !formData.check_in || !formData.check_out) {

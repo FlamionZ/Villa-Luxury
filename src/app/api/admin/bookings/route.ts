@@ -56,7 +56,7 @@ interface BookingRow {
   status: string;
   created_at: string;
   updated_at: string;
-  villa?: Array<{ title?: string | null; slug?: string | null }> | null;
+  villa?: { title?: string | null; slug?: string | null } | Array<{ title?: string | null; slug?: string | null }> | null;
 }
 
 // GET - Fetch all bookings
@@ -97,7 +97,9 @@ export const GET = requireAdmin(async (request: NextRequest) => {
     }
 
     const rows: BookingWithVilla[] = (data ?? []).map((booking: BookingRow) => {
-      const villaInfo = booking.villa?.[0];
+      const villaInfo = Array.isArray(booking.villa)
+        ? booking.villa[0]
+        : booking.villa;
       const checkInDate = booking.check_in_date;
       const checkOutDate = booking.check_out_date;
       const totalNights = Math.ceil(

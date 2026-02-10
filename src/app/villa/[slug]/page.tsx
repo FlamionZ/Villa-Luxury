@@ -244,7 +244,7 @@ export default function VillaDetailPage() {
                 <h2>Ketersediaan & Pemesanan</h2>
                 <div className="villa-calendar-container">
                   <BookingCalendar 
-                    selectedVilla={villa.title}
+                    villaId={villa.id}
                     onDateSelect={(date: string) => {
                       if (!selectedCheckIn) {
                         setSelectedCheckIn(date);

@@ -9,6 +9,69 @@ interface Villa {
   status: string;
 }
 
+interface AvailabilityRow {
+  check_in_date: string;
+  check_out_date: string;
+  status: string;
+}
+
+export async function GET(request: NextRequest) {
+  try {
+    const supabase = getSupabaseAdmin();
+    const { searchParams } = new URL(request.url);
+    const villaIdParam = searchParams.get('villa_id');
+    const villaSlug = searchParams.get('villa_slug');
+
+    let villaId = villaIdParam ? Number(villaIdParam) : NaN;
+
+    if (Number.isNaN(villaId) && villaSlug) {
+      const { data: villaRow, error: villaError } = await supabase
+        .from('villa_types')
+        .select('id')
+        .eq('slug', villaSlug)
+        .maybeSingle<{ id: number }>();
+
+      if (villaError) {
+        throw new Error(villaError.message);
+      }
+
+      if (!villaRow) {
+        return NextResponse.json({ success: false, error: 'Villa not found' }, { status: 404 });
+      }
+
+      villaId = villaRow.id;
+    }
+
+    if (Number.isNaN(villaId)) {
+      return NextResponse.json(
+        { success: false, error: 'Missing or invalid villa_id or villa_slug' },
+        { status: 400 }
+      );
+    }
+
+    const { data: bookings, error: bookingError } = await supabase
+      .from('bookings')
+      .select('check_in_date, check_out_date, status')
+      .eq('villa_id', villaId)
+      .in('status', ['pending', 'confirmed']);
+
+    if (bookingError) {
+      throw new Error(bookingError.message);
+    }
+
+    const rows = (bookings ?? []) as AvailabilityRow[];
+
+    return NextResponse.json({
+      success: true,
+      data: rows
+    });
+  } catch (error) {
+    console.error('Error fetching booking availability:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to fetch availability';
+    return NextResponse.json({ success: false, error: errorMessage }, { status: 500 });
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
